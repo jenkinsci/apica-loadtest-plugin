@@ -14,17 +14,19 @@
     <f:textbox />
   </f:entry>
 -->
+    
     <f:section title="Environment">
-        <f:entry name="environment" title="Choose Environment" field="environment">
+        <f:entry title="Test environment">
             <select name="environment">
-                <option value="prod">Enterprise (loadtest.apicasystem.com)</option>
-                <option value="trial">Trial (loadtest-trial.apicasystem.com)</option>
+                <j:forEach var="env" items="${descriptor.environments}">
+                    <f:option selected="${env.shortName==environment}" value="${env.shortName}">${env.displayName}</f:option>
+                </j:forEach>
             </select>
         </f:entry>
     </f:section>
     <f:section title="Installation">
-        <f:entry title="LTP authentication token" field="authToken">
-            <f:textbox />
+        <f:entry title="LTP authentication token: *" field="authToken">
+            <f:textbox>${AuthToken}</f:textbox>
         </f:entry>
     </f:section>
 </j:jelly>

@@ -1,5 +1,7 @@
 package com.apica.apicaloadtest;
 
+import com.apica.apicaloadtest.environment.LoadtestEnvironment;
+import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.util.FormValidation;
@@ -15,6 +17,7 @@ import org.kohsuke.stapler.QueryParameter;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Sample {@link Builder}.
@@ -35,24 +38,20 @@ import java.io.IOException;
  */
 public class LoadtestBuilder extends Builder
 {
-
-    private final String environment;
+    private final String environmentShortName;
     private final String authToken;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
     @DataBoundConstructor
     public LoadtestBuilder(String environment, String authToken)
     {
-        this.environment = environment;
+        this.environmentShortName = environment;
         this.authToken = authToken;
     }
 
-    /**
-     * We'll use this from the <tt>config.jelly</tt>.
-     */
-    public String getEnvironment()
+    public String getAuthToken()
     {
-        return environment;
+        return authToken;
     }
 
     @Override
@@ -64,11 +63,12 @@ public class LoadtestBuilder extends Builder
         // This also shows how you can consult the global configuration of the builder
         if (getDescriptor().getUseFrench())
         {
-            listener.getLogger().println("Bonjour, " + environment + "!");
+            listener.getLogger().println("Bonjour, " + environmentShortName + "!");
         } else
         {
-            listener.getLogger().println("Hello, " + environment + "!");
+            listener.getLogger().println("Hello, " + environmentShortName + ", " + authToken + "!");
         }
+        
         return true;
     }
 
@@ -112,6 +112,11 @@ public class LoadtestBuilder extends Builder
             load();
         }
 
+        public List<LoadtestEnvironment> getEnvironments()
+        {
+            return LoadtestEnvironmentFactory.getLoadtestEnvironments();
+        }
+
         /**
          * Performs on-the-fly validation of the form field 'environment'.
          *
@@ -124,20 +129,14 @@ public class LoadtestBuilder extends Builder
          * prevent the form from being saved. It just means that a message will
          * be displayed to the user.
          */
-        public FormValidation doCheckName(@QueryParameter String value)
+        public FormValidation doCheckAuthToken(@QueryParameter String value)
                 throws IOException, ServletException
         {
-            return FormValidation.error("Running validation for " + value);
-            /*
             if (value.length() == 0)
             {
-                return FormValidation.error("Please set a name");
+                return FormValidation.error("Please set an auth token.");
             }
-            if (value.length() < 4)
-            {
-                return FormValidation.warning("Isn't the name too short?");
-            }*/
-            
+            return FormValidation.ok();
         }
 
         public boolean isApplicable(Class<? extends AbstractProject> aClass)
@@ -170,9 +169,9 @@ public class LoadtestBuilder extends Builder
          * This method returns true if the global configuration says we should
          * speak French.
          *
-         * The method environment is bit awkward because global.jelly calls this method
- to determine the initial state of the checkbox by the naming
- convention.
+         * The method environment is bit awkward because global.jelly calls this
+         * method to determine the initial state of the checkbox by the naming
+         * convention.
          */
         public boolean getUseFrench()
         {
