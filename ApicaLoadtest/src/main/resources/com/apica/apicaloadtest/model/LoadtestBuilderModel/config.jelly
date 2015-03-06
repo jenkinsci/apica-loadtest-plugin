@@ -1,0 +1,38 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <!--
+    This jelly script is used for per-project configuration.
+
+    See global.jelly for a general discussion about jelly script.
+  -->
+
+  <!--
+    Creates a text field that shows the value of the "name" property.
+    When submitted, it will be passed to the corresponding constructor parameter.
+  
+  <f:entry title="Name" field="name">
+    <f:textbox />
+  </f:entry>
+-->
+    
+    <f:section title="Environment">
+        <f:entry title="Test environment" field="environmentShortName">
+            <select name="environmentShortName">
+                <j:forEach var="inst" items="${descriptor.environments}">
+                    <f:option selected="${inst.shortName==instance.environmentShortName}" value="${inst.shortName}">${inst.displayName}</f:option>
+                </j:forEach>
+            </select>
+        </f:entry>
+    </f:section>
+    <f:section title="Installation">
+        <f:entry title="LTP authentication token: *" field="authToken">
+            <f:textbox>${authToken}</f:textbox>
+        </f:entry>
+        <f:entry title="Preset name: *" field="presetName">
+            <f:textbox>${presetName}</f:textbox>
+        </f:entry>
+        <f:entry title="Load test scenario: *" field="loadtestScenario">
+            <f:textbox>${loadtestScenario}</f:textbox>
+        </f:entry>
+    </f:section>
+</j:jelly>
