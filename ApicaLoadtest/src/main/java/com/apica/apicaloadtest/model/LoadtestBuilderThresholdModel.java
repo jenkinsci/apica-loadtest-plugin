@@ -36,20 +36,45 @@ import org.kohsuke.stapler.DataBoundConstructor;
  */
 public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<LoadtestBuilderThresholdModel>
 {
-    private final String metricName;
+    private final String metricType;
+    private final String evaluationDirection;
+    private final LoadtestThresholdMetricType loadtestThresholdMetricType;
+    private final ThreasholdEvaluationDirection threasholdEvaluationDirection;
     
-    public static final List<String> metricNames = Arrays.asList(LoadtestThresholdMetricType.AVERAGE_RESPONSE_TIME_PER_PAGE.getValue(),
-        LoadtestThresholdMetricType.FAILED_LOOPS_RATE.getValue());
+    public static final List<LoadtestThresholdMetricType> metricTypes = 
+        Arrays.asList(LoadtestThresholdMetricType.AVERAGE_RESPONSE_TIME_PER_PAGE,
+        LoadtestThresholdMetricType.FAILED_LOOPS_RATE);
+    
+    public static final List<ThreasholdEvaluationDirection> evaluationDirections =
+            Arrays.asList(ThreasholdEvaluationDirection.GREATER_THAN, ThreasholdEvaluationDirection.LESS_THAN);
     
     @DataBoundConstructor
-    public LoadtestBuilderThresholdModel(String metricName)
+    public LoadtestBuilderThresholdModel(String metricType, String evaluationDirection)
     {
-        this.metricName = metricName;
+        this.metricType = metricType;
+        this.evaluationDirection = evaluationDirection;
+        loadtestThresholdMetricType = LoadtestThresholdMetricType.get(metricType);
+        threasholdEvaluationDirection = ThreasholdEvaluationDirection.get(evaluationDirection);
     }
 
-    public String getMetricName()
+    public String getMetricType()
     {
-        return metricName;
+        return metricType;
+    }
+
+    public String getEvaluationDirection()
+    {
+        return evaluationDirection;
+    }
+    
+    public LoadtestThresholdMetricType getLoadtestThresholdMetricType()
+    {
+        return loadtestThresholdMetricType;
+    }
+
+    public ThreasholdEvaluationDirection getThreasholdEvaluationDirection()
+    {
+        return threasholdEvaluationDirection;
     }
     
     @Extension
@@ -60,9 +85,14 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
             return "Threshold metric";
         }
         
-        public List<String> getThresholdMetricTypes()
+        public List<LoadtestThresholdMetricType> getMetricTypes()
         {
-            return LoadtestBuilderThresholdModel.metricNames;
+            return LoadtestBuilderThresholdModel.metricTypes;
+        }
+        
+        public List<ThreasholdEvaluationDirection> getEvaluationDirections()
+        {
+            return LoadtestBuilderThresholdModel.evaluationDirections;
         }
     }
 }

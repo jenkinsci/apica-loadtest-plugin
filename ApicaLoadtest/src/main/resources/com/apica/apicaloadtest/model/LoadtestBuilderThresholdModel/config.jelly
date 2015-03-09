@@ -1,0 +1,30 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+         
+    <f:entry title="IF" field="metricType">
+        <select name="lt.metricType">
+            <j:forEach var="mt" items="${descriptor.metricTypes}">
+                <f:option selected="${mt.value ==instance.metricType.value}" value="${mt.value}">
+                    ${mt.description}
+                </f:option>
+            </j:forEach>
+        </select>
+    </f:entry>
+
+    <f:entry title="IS" field="evaluationDirection">
+        <select name="lt.evaluationDirection">
+            <j:forEach var="ed" items="${descriptor.evaluationDirections}">
+                <f:option selected="${ed.value ==instance.evaluationDirection.value}" value="${ed.value}">
+                    ${ed.description}
+                </f:option>
+            </j:forEach>
+        </select>
+    </f:entry>
+
+    <f:entry>
+        <div align="right">
+            <f:repeatableDeleteButton/>
+        </div>
+    </f:entry>
+
+</j:jelly>

@@ -35,4 +35,9 @@
             <f:textbox>${loadtestScenario}</f:textbox>
         </f:entry>
     </f:section>
+    <f:section title="Thresholds">
+        <f:entry title="Thresholds" field="loadtestThresholdParameters">
+            <f:repeatableProperty field="loadtestThresholdParameters" minimum="0" add="Add Threshold"/>
+        </f:entry>
+    </f:section>
 </j:jelly>

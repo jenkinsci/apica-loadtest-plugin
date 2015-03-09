@@ -27,15 +27,16 @@ package com.apica.apicaloadtest.model;
  *
  * @author andras.nemes
  */
-public enum LoadtestThresholdMetricType
+public enum ThreasholdEvaluationDirection
 {
-    AVERAGE_RESPONSE_TIME_PER_PAGE("resp_time_per_page", "Average response time per page"), 
-    FAILED_LOOPS_RATE("failed_loops", "Failed loops rate");
+
+    GREATER_THAN("gt", ">"),
+    LESS_THAN("lt", "<");
 
     private final String value;
     private final String description;
 
-    private LoadtestThresholdMetricType(String value, String description)
+    private ThreasholdEvaluationDirection(String value, String description)
     {
         this.value = value;
         this.description = description;
@@ -50,16 +51,16 @@ public enum LoadtestThresholdMetricType
     {
         return description;
     }
-
-    public static LoadtestThresholdMetricType get(String val)
+    
+    public static ThreasholdEvaluationDirection get(String val)
     {
-        for (LoadtestThresholdMetricType parameterType : LoadtestThresholdMetricType.values())
+        for (ThreasholdEvaluationDirection parameterType : ThreasholdEvaluationDirection.values())
         {
             if (val.equals(parameterType.getValue()))
             {
                 return parameterType;
             }
         }
-        return FAILED_LOOPS_RATE;
+        return GREATER_THAN;
     }
 }
