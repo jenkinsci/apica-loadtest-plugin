@@ -21,35 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.environment;
+package com.apica.apicaloadtest.infrastructure;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * @author andras.nemes
  */
-public class LoadtestEnvironmentFactory
+public class PresetResponse
 {
-    public static List<LoadtestEnvironment> getLoadtestEnvironments()
+    @SerializedName("presetexists")
+    private boolean presetExists;
+    @SerializedName("exception")
+    private String exception;
+    @SerializedName("testinstanceid")
+    private int testInstanceId;
+
+    public int getTestInstanceId()
     {
-        List<LoadtestEnvironment> envs = new ArrayList<>();
-        envs.add(new LoadtestProductionEnvironment());
-        envs.add(new LoadtestTrialEnvironment());
-        return envs;
+        return testInstanceId;
     }
-    
-    public static LoadtestEnvironment getLoadtestEnvironment(String shortDescription)
+
+    public void setTestInstanceId(int testInstanceId)
     {
-        List<LoadtestEnvironment> envs = getLoadtestEnvironments();
-        for (LoadtestEnvironment env : envs)
-        {
-            if (env.isMatch(shortDescription))
-            {
-                return env;
-            }
-        }
-        return envs.get(0);
+        this.testInstanceId = testInstanceId;
+    }
+
+    public boolean isPresetExists()
+    {
+        return presetExists;
+    }
+
+    public void setPresetExists(boolean presetExists)
+    {
+        this.presetExists = presetExists;
+    }
+
+    public String getException()
+    {
+        return exception;
+    }
+
+    public void setException(String exception)
+    {
+        this.exception = exception;
     }
 }

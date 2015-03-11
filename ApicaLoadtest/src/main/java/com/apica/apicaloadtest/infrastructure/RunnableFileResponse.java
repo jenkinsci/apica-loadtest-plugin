@@ -21,35 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.environment;
+package com.apica.apicaloadtest.infrastructure;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * @author andras.nemes
  */
-public class LoadtestEnvironmentFactory
+public class RunnableFileResponse
 {
-    public static List<LoadtestEnvironment> getLoadtestEnvironments()
+
+    @SerializedName("fileexists")
+    private boolean fileExists;
+    @SerializedName("exception")
+    private String exception;
+
+    public boolean isFileExists()
     {
-        List<LoadtestEnvironment> envs = new ArrayList<>();
-        envs.add(new LoadtestProductionEnvironment());
-        envs.add(new LoadtestTrialEnvironment());
-        return envs;
+        return fileExists;
     }
-    
-    public static LoadtestEnvironment getLoadtestEnvironment(String shortDescription)
+
+    public void setFileExists(boolean fileExists)
     {
-        List<LoadtestEnvironment> envs = getLoadtestEnvironments();
-        for (LoadtestEnvironment env : envs)
-        {
-            if (env.isMatch(shortDescription))
-            {
-                return env;
-            }
-        }
-        return envs.get(0);
+        this.fileExists = fileExists;
+    }
+
+    public String getException()
+    {
+        return exception;
+    }
+
+    public void setException(String exception)
+    {
+        this.exception = exception;
     }
 }

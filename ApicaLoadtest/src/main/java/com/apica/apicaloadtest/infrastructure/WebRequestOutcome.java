@@ -21,35 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.environment;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.apica.apicaloadtest.infrastructure;
 
 /**
  *
  * @author andras.nemes
  */
-public class LoadtestEnvironmentFactory
+public class WebRequestOutcome
 {
-    public static List<LoadtestEnvironment> getLoadtestEnvironments()
+    private int httpResponseCode;
+    private String rawResponseContent;
+    private String exceptionMessage;
+    private boolean webRequestSuccessful;
+
+    public boolean isWebRequestSuccessful()
     {
-        List<LoadtestEnvironment> envs = new ArrayList<>();
-        envs.add(new LoadtestProductionEnvironment());
-        envs.add(new LoadtestTrialEnvironment());
-        return envs;
+        return webRequestSuccessful;
     }
-    
-    public static LoadtestEnvironment getLoadtestEnvironment(String shortDescription)
+
+    public void setWebRequestSuccessful(boolean webRequestSuccessful)
     {
-        List<LoadtestEnvironment> envs = getLoadtestEnvironments();
-        for (LoadtestEnvironment env : envs)
-        {
-            if (env.isMatch(shortDescription))
-            {
-                return env;
-            }
-        }
-        return envs.get(0);
+        this.webRequestSuccessful = webRequestSuccessful;
+    }
+
+    public String getExceptionMessage()
+    {
+        return exceptionMessage;
+    }
+
+    public void setExceptionMessage(String exceptionMessage)
+    {
+        this.exceptionMessage = exceptionMessage;
+    }
+
+    public int getHttpResponseCode()
+    {
+        return httpResponseCode;
+    }
+
+    public void setHttpResponseCode(int httpResponseCode)
+    {
+        this.httpResponseCode = httpResponseCode;
+    }
+
+    public String getRawResponseContent()
+    {
+        return rawResponseContent;
+    }
+
+    public void setRawResponseContent(String rawResponseContent)
+    {
+        this.rawResponseContent = rawResponseContent;
     }
 }

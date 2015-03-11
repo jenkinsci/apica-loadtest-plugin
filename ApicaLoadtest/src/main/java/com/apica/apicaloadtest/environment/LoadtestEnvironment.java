@@ -3,7 +3,6 @@ package com.apica.apicaloadtest.environment;
 import hudson.ExtensionPoint;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
-import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 
 public abstract class LoadtestEnvironment implements ExtensionPoint, Describable<LoadtestEnvironment>
@@ -42,4 +41,8 @@ public abstract class LoadtestEnvironment implements ExtensionPoint, Describable
     {
         this.displayName = displayName;
     }
+    
+    public abstract String getLtpWebServiceBaseUrl();
+    public abstract String getLtpWebServiceVersion();
+    public abstract boolean isMatch(String shortName);
 }

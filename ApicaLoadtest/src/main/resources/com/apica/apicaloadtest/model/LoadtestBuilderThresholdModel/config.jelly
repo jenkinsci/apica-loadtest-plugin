@@ -1,24 +1,33 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
          
-    <f:entry title="IF" field="metricType">
-        <select name="lt.metricType">
+    <f:entry title="If" field="metricType">
+        <select name="lt.metricType" onchange="adjustUnitOfMeasurement(this)">
             <j:forEach var="mt" items="${descriptor.metricTypes}">
-                <f:option selected="${mt.value ==instance.metricType.value}" value="${mt.value}">
+                <f:option selected="${mt.value ==instance.loadtestThresholdMetricType.value}" value="${mt.value}">
                     ${mt.description}
                 </f:option>
             </j:forEach>
         </select>
     </f:entry>
 
-    <f:entry title="IS" field="evaluationDirection">
-        <select name="lt.evaluationDirection">
-            <j:forEach var="ed" items="${descriptor.evaluationDirections}">
-                <f:option selected="${ed.value ==instance.evaluationDirection.value}" value="${ed.value}">
+    <f:entry title="is" field="evaluationDirection">
+        <select name="lt.evaluationDirection" >
+            <j:forEach var="ed" items="${descriptor.evaluationDirections}" >
+                <f:option selected="${ed.value ==instance.threasholdEvaluationDirection.value}" value="${ed.value}">
                     ${ed.description}
                 </f:option>
             </j:forEach>
         </select>
+    </f:entry>
+
+    <f:entry title="value">
+        <f:textbox class="short-textbox" style="width: 150px;" field="numericValue" paramType="text" value="${instance.numericValue}"/>
+        <f:label class="numericValueMeasurementUnit"> ${instance.loadtestThresholdMetricType.unitOfMeasurementSymbol}</f:label>
+    </f:entry>
+
+    <f:entry>
+        <f:label>then mark load test as failed.</f:label>
     </f:entry>
 
     <f:entry>

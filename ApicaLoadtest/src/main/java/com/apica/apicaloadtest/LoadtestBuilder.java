@@ -3,6 +3,7 @@ package com.apica.apicaloadtest;
 import com.apica.apicaloadtest.environment.LoadtestEnvironment;
 import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
 import com.apica.apicaloadtest.model.LoadtestBuilderModel;
+import com.google.gson.Gson;
 import hudson.Launcher;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
@@ -59,8 +60,8 @@ public class LoadtestBuilder extends Builder
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
     {
         PrintStream logger = listener.getLogger();
-        logger.print("Hello, builder model auth token is " + this.loadtestBuilderModel.getAuthToken()
-            + ", environment short name: " + this.loadtestBuilderModel.getEnvironmentShortName());
+        Gson gson = new Gson();
+        listener.getLogger().print(gson.toJson(this.loadtestBuilderModel));
         return true;
     }
 

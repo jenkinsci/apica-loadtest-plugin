@@ -30,8 +30,8 @@ package com.apica.apicaloadtest.model;
 public enum ThreasholdEvaluationDirection
 {
 
-    GREATER_THAN("gt", ">"),
-    LESS_THAN("lt", "<");
+    GREATER_THAN("gt", "greater than"),
+    LESS_THAN("lt", "less than");
 
     private final String value;
     private final String description;

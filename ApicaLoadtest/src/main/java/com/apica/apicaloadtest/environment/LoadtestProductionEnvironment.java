@@ -34,4 +34,22 @@ public class LoadtestProductionEnvironment extends LoadtestEnvironment
     
     @Extension 
     public static final LoadtestEnvironmentDescriptor D = new LoadtestEnvironmentDescriptor(LoadtestProductionEnvironment.class);
+
+    @Override
+    public String getLtpWebServiceBaseUrl()
+    {
+        return "api-ltp.apicasystem.com";
+    }
+
+    @Override
+    public String getLtpWebServiceVersion()
+    {
+        return "v1";
+    }
+
+    @Override
+    public boolean isMatch(String shortName)
+    {
+        return shortName.toLowerCase().equals("prod");
+    }
 }
