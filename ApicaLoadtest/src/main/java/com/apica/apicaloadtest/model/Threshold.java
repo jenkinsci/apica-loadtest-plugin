@@ -21,34 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.jobexecution;
+package com.apica.apicaloadtest.model;
 
 /**
  *
  * @author andras.nemes
  */
-public class JobParamsValidationResult
+public class Threshold
 {
-    private boolean allParamsPresent;
-    private String exceptionMessage;
+    private final LoadtestThresholdMetric metric;
+    private final ThresholdDirection direction;
+    private final int numericValue;
 
-    public boolean isAllParamsPresent()
+    public Threshold(LoadtestThresholdMetric metric, ThresholdDirection direction, int numericValue)
     {
-        return allParamsPresent;
+        this.metric = metric;
+        this.direction = direction;
+        this.numericValue = numericValue;
     }
-
-    public void setAllParamsPresent(boolean allParamsPresent)
-    {
-        this.allParamsPresent = allParamsPresent;
-    }
-
-    public String getExceptionMessage()
-    {
-        return exceptionMessage;
-    }
-
-    public void setExceptionMessage(String exceptionMessage)
-    {
-        this.exceptionMessage = exceptionMessage;
-    }
+    
+    
 }

@@ -2,6 +2,7 @@ package com.apica.apicaloadtest;
 
 import com.apica.apicaloadtest.environment.LoadtestEnvironment;
 import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
+import com.apica.apicaloadtest.jobexecution.validation.JobParamsValidationResult;
 import com.apica.apicaloadtest.jobexecution.LoadtestJobSummaryResponse;
 import com.apica.apicaloadtest.model.LoadtestBuilderModel;
 import com.google.gson.Gson;
@@ -10,6 +11,7 @@ import hudson.Extension;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.AbstractProject;
+import hudson.model.Result;
 import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
 import java.io.PrintStream;
@@ -65,7 +67,20 @@ public class LoadtestBuilder extends Builder
         logger.println("Apica Loadtest starting...");
         
         logger.print(gson.toJson(this.loadtestBuilderModel));
+        //listener.finished(Result.SUCCESS);
+        //listener.finished(Result.FAILURE);
         return true;
+    }
+    
+    private JobParamsValidationResult validateJobParams()
+    {
+        JobParamsValidationResult res = new JobParamsValidationResult();
+        StringBuilder sb = new StringBuilder();
+        String loadtestPresetName = this.loadtestBuilderModel.getPresetName();
+        String loadtestFileName = this.loadtestBuilderModel.getLoadtestScenario();
+        String authToken = this.loadtestBuilderModel.getAuthToken();
+        res.setAllParamsPresent(true);
+        return res;
     }
     
     private void logJobSummary(LoadtestJobSummaryResponse jobSummaryResponse, PrintStream logger)

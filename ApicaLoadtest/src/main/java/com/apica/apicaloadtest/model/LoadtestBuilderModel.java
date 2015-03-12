@@ -25,14 +25,17 @@ package com.apica.apicaloadtest.model;
 
 import com.apica.apicaloadtest.environment.LoadtestEnvironment;
 import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
+import com.apica.apicaloadtest.infrastructure.JobParamValidatorService;
 import com.apica.apicaloadtest.infrastructure.PresetResponse;
 import com.apica.apicaloadtest.infrastructure.RunnableFileResponse;
 import com.apica.apicaloadtest.infrastructure.ServerSideLtpApiWebService;
+import com.apica.apicaloadtest.jobexecution.validation.JobParamsValidationResult;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -50,6 +53,8 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
     private final String presetName;
     private final String loadtestScenario;
     private final List<LoadtestBuilderThresholdModel> loadtestThresholdParameters;
+    private final List<Threshold> thresholds;
+    private final static JobParamValidatorService validatorService = new JobParamValidatorService();
 
     @DataBoundConstructor
     public LoadtestBuilderModel(String environmentShortName, String authToken, String presetName, String loadtestScenario, List<LoadtestBuilderThresholdModel> loadtestThresholdParameters)
@@ -59,6 +64,19 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
         this.presetName = presetName;
         this.loadtestScenario = loadtestScenario;
         this.loadtestThresholdParameters = loadtestThresholdParameters;
+        thresholds = new ArrayList<>();
+        for (LoadtestBuilderThresholdModel loadtestThresholdParameter : loadtestThresholdParameters)
+        {
+            Threshold t = new Threshold(loadtestThresholdParameter.getLoadtestThresholdMetric(),
+                    loadtestThresholdParameter.getThresholdDirection(), 
+                    loadtestThresholdParameter.getNumericValue());
+            thresholds.add(t);
+        }
+    }
+
+    public List<Threshold> getThresholds()
+    {
+        return thresholds;
     }
 
     public String getEnvironmentShortName()
@@ -104,16 +122,16 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
         public FormValidation doCheckAuthToken(@QueryParameter String value)
                 throws IOException, ServletException
         {
-            if (value.length() == 0)
+            if (!validatorService.paramValueOkClientSide(value))
             {
-                return FormValidation.error("Please set an auth token.");
+                return FormValidation.error("Please set a valid auth token.");
             }
             return FormValidation.ok();
         }
 
         public FormValidation doCheckPresetName(@QueryParameter String value)
         {
-            if (value.length() == 0)
+            if (!validatorService.paramValueOkClientSide(value))
             {
                 return FormValidation.error("Please set a preset name.");
             }
@@ -122,11 +140,11 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
 
         public FormValidation doCheckLoadtestScenario(@QueryParameter String value)
         {
-            if (value.length() == 0)
+            if (!validatorService.paramValueOkClientSide(value))
             {
                 return FormValidation.error("Please set a loadtest scenario name.");
             }
-            else if (!fileIsClass(value) && !fileIsZip(value))
+            else if (!validatorService.scenarioNameOkClientSide(value))
             {
                 return FormValidation.error("Load test file name must be either a .class or .zip file.");
             }
@@ -139,70 +157,24 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
                 @QueryParameter("presetName") final String presetName,
                 @QueryParameter("loadtestScenario") final String loadtestScenario) throws IOException, ServletException
         {
-            if (isNullOrEmpty(authToken))
-            {
-                return FormValidation.error("Auth token cannot be empty");
-            }
-
-            if (isNullOrEmpty(presetName))
-            {
-                return FormValidation.error("Preset name cannot be empty");
-            }
-
-            if (isNullOrEmpty(loadtestScenario))
-            {
-                return FormValidation.error("Loadtest scenario cannot be empty");
-            }
-
-            if (!fileIsClass(loadtestScenario) && !fileIsZip(loadtestScenario))
-            {
-                return FormValidation.error("Load test file name must be either a .class or .zip file.");
-            }
-            
             LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(environmentShortName);
-            ServerSideLtpApiWebService serverSideService = new ServerSideLtpApiWebService(le);
-            PresetResponse presetResponse = serverSideService.checkPreset(authToken, presetName);
-            if (!presetResponse.isPresetExists())
-            {
-                if (presetResponse.getException() != null && !presetResponse.getException().equals(""))
-                {
-                    return FormValidation.error("Exception while checking preset: ".concat(presetResponse.getException()));
-                }
-                else
-                {
-                    return FormValidation.error("No such preset found: ".concat(presetName));
-                }
-            }
-            else //validate test instance id
-            {
-                if (presetResponse.getTestInstanceId() < 1)
-                {
-                    return FormValidation.error("The preset is not linked to a valid test instance. Please check in LTP if you have selected an existing test instance for the preset.");
-                }
-            }
+            JobParamsValidationResult validateJobParameters = validatorService.validateJobParameters(authToken, presetName, loadtestScenario, le);
             
-            RunnableFileResponse runnableFileResponse = serverSideService.checkRunnableFile(authToken, loadtestScenario);
-            if (!runnableFileResponse.isFileExists())
+            if (!isNullOrEmpty(validateJobParameters.getAuthTokenException()))
             {
-                if (runnableFileResponse.getException() != null && !runnableFileResponse.getException().equals(""))
-                {
-                    return FormValidation.error("Exception while checking load test file: ".concat(runnableFileResponse.getException()));
-                } else
-                {
-                    return FormValidation.error("No such load test file found: ".concat(loadtestScenario));
-                }
+                return FormValidation.error(validateJobParameters.getAuthTokenException());
+            }
+
+            if (!isNullOrEmpty(validateJobParameters.getPresetNameException()))
+            {
+                return FormValidation.error(validateJobParameters.getPresetNameException());
+            }
+
+            if (!isNullOrEmpty(validateJobParameters.getScenarioFileException()))
+            {
+                return FormValidation.error(validateJobParameters.getScenarioFileException());
             }
             return FormValidation.ok("All set");
-        }
-
-        private boolean fileIsZip(String fileName)
-        {
-            return fileName.endsWith(".zip");
-        }
-
-        private boolean fileIsClass(String fileName)
-        {
-            return fileName.endsWith(".class");
         }
 
         private boolean isNullOrEmpty(String s)
