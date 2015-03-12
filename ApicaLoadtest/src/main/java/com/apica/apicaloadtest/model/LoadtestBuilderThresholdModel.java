@@ -43,24 +43,23 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
 
     private final String metricType;
     private final String evaluationDirection;
-    private final LoadtestThresholdMetricType loadtestThresholdMetricType;
-    private final ThreasholdEvaluationDirection threasholdEvaluationDirection;
+    private final LoadtestThresholdMetric loadtestThresholdMetric;
+    private final ThresholdDirection thresholdDirection;
     private final int numericValue;
 
-    public static final List<LoadtestThresholdMetricType> metricTypes
-            = Arrays.asList(LoadtestThresholdMetricType.AVERAGE_RESPONSE_TIME_PER_PAGE,
-                    LoadtestThresholdMetricType.FAILED_LOOPS_RATE);
+    public static final List<LoadtestThresholdMetric> metricTypes
+            = LoadtestThresholdMetricFactory.getAllMetrics();
 
-    public static final List<ThreasholdEvaluationDirection> evaluationDirections
-            = Arrays.asList(ThreasholdEvaluationDirection.GREATER_THAN, ThreasholdEvaluationDirection.LESS_THAN);
+    public static final List<ThresholdDirection> evaluationDirections
+            = ThresholdDirectionFactory.getThresholdDirections();
 
     @DataBoundConstructor
     public LoadtestBuilderThresholdModel(String metricType, String evaluationDirection, int numericValue)
     {
         this.metricType = metricType;
         this.evaluationDirection = evaluationDirection;
-        loadtestThresholdMetricType = LoadtestThresholdMetricType.get(metricType);
-        threasholdEvaluationDirection = ThreasholdEvaluationDirection.get(evaluationDirection);
+        loadtestThresholdMetric = LoadtestThresholdMetricFactory.getMetric(metricType);
+        thresholdDirection = ThresholdDirectionFactory.getThresholdDirection(evaluationDirection);
         this.numericValue = numericValue;
     }
 
@@ -74,14 +73,14 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
         return evaluationDirection;
     }
 
-    public LoadtestThresholdMetricType getLoadtestThresholdMetricType()
+    public LoadtestThresholdMetric getLoadtestThresholdMetric()
     {
-        return loadtestThresholdMetricType;
+        return loadtestThresholdMetric;
     }
 
-    public ThreasholdEvaluationDirection getThreasholdEvaluationDirection()
+    public ThresholdDirection getThresholdDirection()
     {
-        return threasholdEvaluationDirection;
+        return thresholdDirection;
     }
 
     public int getNumericValue()
@@ -98,12 +97,12 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
             return "Threshold metric";
         }
 
-        public List<LoadtestThresholdMetricType> getMetricTypes()
+        public List<LoadtestThresholdMetric> getMetricTypes()
         {
             return LoadtestBuilderThresholdModel.metricTypes;
         }
 
-        public List<ThreasholdEvaluationDirection> getEvaluationDirections()
+        public List<ThresholdDirection> getEvaluationDirections()
         {
             return LoadtestBuilderThresholdModel.evaluationDirections;
         }

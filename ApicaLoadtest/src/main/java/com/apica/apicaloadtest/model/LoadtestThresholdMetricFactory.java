@@ -23,44 +23,34 @@
  */
 package com.apica.apicaloadtest.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author andras.nemes
  */
-public enum ThreasholdEvaluationDirection
+public class LoadtestThresholdMetricFactory
 {
-
-    GREATER_THAN("gt", "greater than"),
-    LESS_THAN("lt", "less than");
-
-    private final String value;
-    private final String description;
-
-    private ThreasholdEvaluationDirection(String value, String description)
+    public static List<LoadtestThresholdMetric> getAllMetrics()
     {
-        this.value = value;
-        this.description = description;
-    }
-
-    public String getValue()
-    {
-        return value;
-    }
-
-    public String getDescription()
-    {
-        return description;
+        List<LoadtestThresholdMetric> list = new ArrayList<>();
+        list.add(new AverageResponseTimePerPageMetric());
+        list.add(new FailedLoopsRateMetric());
+        return list;
     }
     
-    public static ThreasholdEvaluationDirection get(String val)
+    public static LoadtestThresholdMetric getMetric(String shortDescription)
     {
-        for (ThreasholdEvaluationDirection parameterType : ThreasholdEvaluationDirection.values())
+        List<LoadtestThresholdMetric> allMetrics = getAllMetrics();
+        for (LoadtestThresholdMetric metric : allMetrics)
         {
-            if (val.equals(parameterType.getValue()))
+            if (metric.isMatch(shortDescription))
             {
-                return parameterType;
+                return metric;
             }
         }
-        return GREATER_THAN;
+        
+        return allMetrics.get(0);
     }
 }

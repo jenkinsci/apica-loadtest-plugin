@@ -2,6 +2,7 @@ package com.apica.apicaloadtest;
 
 import com.apica.apicaloadtest.environment.LoadtestEnvironment;
 import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
+import com.apica.apicaloadtest.jobexecution.LoadtestJobSummaryResponse;
 import com.apica.apicaloadtest.model.LoadtestBuilderModel;
 import com.google.gson.Gson;
 import hudson.Launcher;
@@ -61,8 +62,21 @@ public class LoadtestBuilder extends Builder
     {
         PrintStream logger = listener.getLogger();
         Gson gson = new Gson();
-        listener.getLogger().print(gson.toJson(this.loadtestBuilderModel));
+        logger.println("Apica Loadtest starting...");
+        
+        logger.print(gson.toJson(this.loadtestBuilderModel));
         return true;
+    }
+    
+    private void logJobSummary(LoadtestJobSummaryResponse jobSummaryResponse, PrintStream logger)
+    {
+        if (jobSummaryResponse.getException().equals(""))
+        {
+            logger.println(jobSummaryResponse.toString());
+        } else
+        {
+            logger.println("Exception when retrieving job summary statistics: " + jobSummaryResponse.getException());
+        }
     }
 
     @Extension // This indicates to Jenkins that this is an implementation of an extension point.

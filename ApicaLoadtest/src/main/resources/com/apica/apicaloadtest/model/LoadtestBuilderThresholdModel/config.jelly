@@ -4,7 +4,7 @@
     <f:entry title="If" field="metricType">
         <select name="lt.metricType" onchange="adjustUnitOfMeasurement(this)">
             <j:forEach var="mt" items="${descriptor.metricTypes}">
-                <f:option selected="${mt.value ==instance.loadtestThresholdMetricType.value}" value="${mt.value}">
+                <f:option selected="${mt.value ==instance.loadtestThresholdMetric.value}" value="${mt.value}">
                     ${mt.description}
                 </f:option>
             </j:forEach>
@@ -14,7 +14,7 @@
     <f:entry title="is" field="evaluationDirection">
         <select name="lt.evaluationDirection" >
             <j:forEach var="ed" items="${descriptor.evaluationDirections}" >
-                <f:option selected="${ed.value ==instance.threasholdEvaluationDirection.value}" value="${ed.value}">
+                <f:option selected="${ed.value ==instance.thresholdDirection.value}" value="${ed.value}">
                     ${ed.description}
                 </f:option>
             </j:forEach>

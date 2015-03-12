@@ -49,7 +49,7 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
     private final String authToken;
     private final String presetName;
     private final String loadtestScenario;
-    private List<LoadtestBuilderThresholdModel> loadtestThresholdParameters;
+    private final List<LoadtestBuilderThresholdModel> loadtestThresholdParameters;
 
     @DataBoundConstructor
     public LoadtestBuilderModel(String environmentShortName, String authToken, String presetName, String loadtestScenario, List<LoadtestBuilderThresholdModel> loadtestThresholdParameters)

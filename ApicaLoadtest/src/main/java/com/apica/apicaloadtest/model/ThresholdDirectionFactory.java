@@ -23,50 +23,34 @@
  */
 package com.apica.apicaloadtest.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author andras.nemes
  */
-public enum LoadtestThresholdMetricType
+public class ThresholdDirectionFactory
 {
-    AVERAGE_RESPONSE_TIME_PER_PAGE("resp_time_per_page", "Average response time per page", "ms"), 
-    FAILED_LOOPS_RATE("failed_loops", "Failed loops rate", "%");
-
-    private final String value;
-    private final String description;
-    private final String unitOfMeasurementSymbol;
-    
-    private LoadtestThresholdMetricType(String value, String description, String unitOfMeasurementSymbol)
+    public static List<ThresholdDirection> getThresholdDirections()
     {
-        this.value = value;
-        this.description = description;
-        this.unitOfMeasurementSymbol = unitOfMeasurementSymbol;
-    }
-
-    public String getValue()
-    {
-        return value;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public String getUnitOfMeasurementSymbol()
-    {
-        return unitOfMeasurementSymbol;
+        List<ThresholdDirection> dirs = new ArrayList<>();
+        dirs.add(new GreaterThan());
+        dirs.add(new LessThan());
+        return dirs;
     }
     
-    public static LoadtestThresholdMetricType get(String val)
+    public static ThresholdDirection getThresholdDirection(String description)
     {
-        for (LoadtestThresholdMetricType parameterType : LoadtestThresholdMetricType.values())
+        List<ThresholdDirection> dirs = getThresholdDirections();
+        for (ThresholdDirection dir : dirs)
         {
-            if (val.equals(parameterType.getValue()))
+            if (dir.isMatch(description))
             {
-                return parameterType;
+                return dir;
             }
         }
-        return FAILED_LOOPS_RATE;
+        
+        return dirs.get(0);
     }
 }
