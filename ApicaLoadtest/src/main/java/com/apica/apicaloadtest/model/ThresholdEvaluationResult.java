@@ -27,17 +27,28 @@ package com.apica.apicaloadtest.model;
  *
  * @author andras.nemes
  */
-public class GreaterThan extends ThresholdDirection
+public class ThresholdEvaluationResult
 {
-    public GreaterThan()
+    private boolean thresholdBroken;
+    private String report;
+
+    public boolean isThresholdBroken()
     {
-        super("gt", "greater than");
+        return thresholdBroken;
     }
 
-    @Override
-    public boolean thresholdBroken(double threshold, double actual)
+    public void setThresholdBroken(boolean thresholdBroken)
     {
-        return actual > threshold;
+        this.thresholdBroken = thresholdBroken;
     }
-    
+
+    public String getReport()
+    {
+        return report;
+    }
+
+    public void setReport(String report)
+    {
+        this.report = report;
+    }
 }

@@ -23,6 +23,8 @@
  */
 package com.apica.apicaloadtest.model;
 
+import com.apica.apicaloadtest.jobexecution.PerformanceSummary;
+
 /**
  *
  * @author andras.nemes
@@ -34,5 +36,15 @@ public class FailedLoopsRateMetric extends LoadtestThresholdMetric
     {
         super("failed_loops", "Failed loops rate", "%");
     }
-    
+
+    @Override
+    public double extractActualValueFrom(PerformanceSummary performanceSummary)
+    {
+        int passedLoops = performanceSummary.getTotalPassedLoops();
+        int failedLoops = performanceSummary.getTotalFailedLoops();
+        int totalLoops = passedLoops + failedLoops;
+        double failedLoopsShare = (double) (failedLoops * 100.0) / (double) (totalLoops * 100.0);
+        return failedLoopsShare;
+    }
+
 }

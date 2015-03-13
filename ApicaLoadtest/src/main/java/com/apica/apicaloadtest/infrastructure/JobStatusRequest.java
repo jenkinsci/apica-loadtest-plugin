@@ -21,23 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
+package com.apica.apicaloadtest.infrastructure;
 
 /**
  *
  * @author andras.nemes
  */
-public class GreaterThan extends ThresholdDirection
+public class JobStatusRequest
 {
-    public GreaterThan()
+    private String authToken;
+    private int jobId;
+    
+    public String getAuthToken()
     {
-        super("gt", "greater than");
+        return authToken;
     }
 
-    @Override
-    public boolean thresholdBroken(double threshold, double actual)
+    public void setAuthToken(String authToken)
     {
-        return actual > threshold;
+        this.authToken = authToken;
     }
-    
+
+    public int getJobId()
+    {
+        return jobId;
+    }
+
+    public void setJobId(int jobId)
+    {
+        this.jobId = jobId;
+    }
 }

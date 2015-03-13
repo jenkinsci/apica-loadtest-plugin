@@ -21,23 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
+package com.apica.apicaloadtest.jobexecution.requestresponse;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * @author andras.nemes
  */
-public class GreaterThan extends ThresholdDirection
+public class StartJobByPresetResponse
 {
-    public GreaterThan()
+    @SerializedName("exception")
+    private String exception;
+    @SerializedName("jobid")
+    private int jobId;
+    
+    public String getException()
     {
-        super("gt", "greater than");
+        return exception;
     }
 
-    @Override
-    public boolean thresholdBroken(double threshold, double actual)
+    public void setException(String exception)
     {
-        return actual > threshold;
+        this.exception = exception;
     }
-    
+
+    public int getJobId()
+    {
+        return jobId;
+    }
+
+    public void setJobId(int jobId)
+    {
+        this.jobId = jobId;
+    }
 }

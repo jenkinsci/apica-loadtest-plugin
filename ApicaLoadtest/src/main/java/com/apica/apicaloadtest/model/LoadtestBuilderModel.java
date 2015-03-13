@@ -26,16 +26,13 @@ package com.apica.apicaloadtest.model;
 import com.apica.apicaloadtest.environment.LoadtestEnvironment;
 import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
 import com.apica.apicaloadtest.infrastructure.JobParamValidatorService;
-import com.apica.apicaloadtest.infrastructure.PresetResponse;
-import com.apica.apicaloadtest.infrastructure.RunnableFileResponse;
-import com.apica.apicaloadtest.infrastructure.ServerSideLtpApiWebService;
 import com.apica.apicaloadtest.jobexecution.validation.JobParamsValidationResult;
+import com.apica.apicaloadtest.utils.Utils;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -53,7 +50,6 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
     private final String presetName;
     private final String loadtestScenario;
     private final List<LoadtestBuilderThresholdModel> loadtestThresholdParameters;
-    private final List<Threshold> thresholds;
     private final static JobParamValidatorService validatorService = new JobParamValidatorService();
 
     @DataBoundConstructor
@@ -64,19 +60,6 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
         this.presetName = presetName;
         this.loadtestScenario = loadtestScenario;
         this.loadtestThresholdParameters = loadtestThresholdParameters;
-        thresholds = new ArrayList<>();
-        for (LoadtestBuilderThresholdModel loadtestThresholdParameter : loadtestThresholdParameters)
-        {
-            Threshold t = new Threshold(loadtestThresholdParameter.getLoadtestThresholdMetric(),
-                    loadtestThresholdParameter.getThresholdDirection(), 
-                    loadtestThresholdParameter.getNumericValue());
-            thresholds.add(t);
-        }
-    }
-
-    public List<Threshold> getThresholds()
-    {
-        return thresholds;
     }
 
     public String getEnvironmentShortName()
@@ -160,42 +143,21 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
             LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(environmentShortName);
             JobParamsValidationResult validateJobParameters = validatorService.validateJobParameters(authToken, presetName, loadtestScenario, le);
             
-            if (!isNullOrEmpty(validateJobParameters.getAuthTokenException()))
+            if (!Utils.isNullOrEmpty(validateJobParameters.getAuthTokenException()))
             {
                 return FormValidation.error(validateJobParameters.getAuthTokenException());
             }
 
-            if (!isNullOrEmpty(validateJobParameters.getPresetNameException()))
+            if (!Utils.isNullOrEmpty(validateJobParameters.getPresetNameException()))
             {
                 return FormValidation.error(validateJobParameters.getPresetNameException());
             }
 
-            if (!isNullOrEmpty(validateJobParameters.getScenarioFileException()))
+            if (!Utils.isNullOrEmpty(validateJobParameters.getScenarioFileException()))
             {
                 return FormValidation.error(validateJobParameters.getScenarioFileException());
             }
             return FormValidation.ok("All set");
-        }
-
-        private boolean isNullOrEmpty(String s)
-        {
-            if (s == null)
-            {
-                return true;
-            }
-            if (s.length() == 0)
-            {
-                return true;
-            }
-            if (s.trim().equals(""))
-            {
-                return true;
-            }
-            if (s.equals(""))
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

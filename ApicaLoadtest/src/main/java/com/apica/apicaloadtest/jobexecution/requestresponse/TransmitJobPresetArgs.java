@@ -21,23 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
+package com.apica.apicaloadtest.jobexecution.requestresponse;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * @author andras.nemes
  */
-public class GreaterThan extends ThresholdDirection
+public class TransmitJobPresetArgs
 {
-    public GreaterThan()
+    @SerializedName("PresetName")
+    private String presetName;
+    @SerializedName("RunnableFileName")
+    private String runnableFileName;
+
+    public TransmitJobPresetArgs(String presetName, String runnableFileName)
     {
-        super("gt", "greater than");
+        this.presetName = presetName;
+        this.runnableFileName = runnableFileName;
     }
 
-    @Override
-    public boolean thresholdBroken(double threshold, double actual)
+    public String getPresetName()
     {
-        return actual > threshold;
+        return presetName;
     }
-    
+
+    public void setPresetName(String presetName)
+    {
+        this.presetName = presetName;
+    }
+
+    public String getRunnableFileName()
+    {
+        return runnableFileName;
+    }
+
+    public void setRunnableFileName(String runnableFileName)
+    {
+        this.runnableFileName = runnableFileName;
+    }
 }

@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.jobexecution;
+package com.apica.apicaloadtest.jobexecution.requestresponse;
 
+import com.apica.apicaloadtest.jobexecution.PerformanceSummary;
 import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 

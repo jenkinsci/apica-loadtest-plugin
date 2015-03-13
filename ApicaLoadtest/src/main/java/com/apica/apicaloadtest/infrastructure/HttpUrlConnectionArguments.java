@@ -23,48 +23,67 @@
  */
 package com.apica.apicaloadtest.infrastructure;
 
-import com.google.gson.annotations.SerializedName;
+import java.net.URI;
 
 /**
  *
  * @author andras.nemes
  */
-public class PresetResponse
+public class HttpUrlConnectionArguments
 {
-    @SerializedName("presetexists")
-    private boolean presetExists;
-    @SerializedName("exception")
-    private String exception;
-    @SerializedName("testinstanceid")
-    private int testInstanceId;
+    private String authToken;
+    private String webMethod;
+    private String requestBody;
+    private URI uri;
+    private String contentType;
 
-    public int getTestInstanceId()
+    public String getContentType()
     {
-        return testInstanceId;
+        return contentType;
     }
 
-    public void setTestInstanceId(int testInstanceId)
+    public void setContentType(String contentType)
     {
-        this.testInstanceId = testInstanceId;
+        this.contentType = contentType;
     }
 
-    public boolean isPresetExists()
+    public String getAuthToken()
     {
-        return presetExists;
+        return authToken;
     }
 
-    public void setPresetExists(boolean presetExists)
+    public void setAuthToken(String authToken)
     {
-        this.presetExists = presetExists;
+        this.authToken = authToken;
     }
 
-    public String getException()
+    public String getWebMethod()
     {
-        return exception;
+        return webMethod;
     }
 
-    public void setException(String exception)
+    public void setWebMethod(String webMethod)
     {
-        this.exception = exception;
+        this.webMethod = webMethod;
+    }
+
+    public String getRequestBody()
+    {
+        return requestBody;
+    }
+
+    public void setRequestBody(String requestBody)
+    {
+        this.requestBody = requestBody;
+    }
+
+    public URI getUri()
+    {
+        return uri;
+    }
+
+    public void setUri(URI uri)
+    {
+        this.uri = uri;
     }
 }

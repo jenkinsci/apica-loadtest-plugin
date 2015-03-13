@@ -21,38 +21,47 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.jobexecution;
-
-import com.google.gson.annotations.SerializedName;
+package com.apica.apicaloadtest.jobexecution.requestresponse;
 
 /**
  *
  * @author andras.nemes
  */
-public class StartJobByPresetResponse
+public class TransmitJobRequestArgs
 {
-    @SerializedName("exception")
-    private String exception;
-    @SerializedName("jobid")
-    private int jobId;
+    private String authToken;
+    private String fileName;
+    private String presetName;
 
-    public String getException()
+    public String getAuthToken()
     {
-        return exception;
+        return authToken;
     }
 
-    public void setException(String exception)
+    public void setAuthToken(String authToken)
     {
-        this.exception = exception;
+        this.authToken = authToken;
     }
 
-    public int getJobId()
+    public String getFileName()
     {
-        return jobId;
+        return fileName;
     }
 
-    public void setJobId(int jobId)
+    public void setFileName(String fileName)
     {
-        this.jobId = jobId;
+        this.fileName = fileName;
     }
+
+    public String getPresetName()
+    {
+        return presetName;
+    }
+
+    public void setPresetName(String presetName)
+    {
+        this.presetName = presetName;
+    }
+    
+    
 }

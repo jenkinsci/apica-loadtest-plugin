@@ -23,6 +23,8 @@
  */
 package com.apica.apicaloadtest.model;
 
+import com.apica.apicaloadtest.jobexecution.PerformanceSummary;
+
 /**
  *
  * @author andras.nemes
@@ -59,4 +61,7 @@ public abstract class LoadtestThresholdMetric
     {
         return value.equalsIgnoreCase(shortDescription);
     }
+    
+    public abstract double extractActualValueFrom(PerformanceSummary performanceSummary);
+            
 }

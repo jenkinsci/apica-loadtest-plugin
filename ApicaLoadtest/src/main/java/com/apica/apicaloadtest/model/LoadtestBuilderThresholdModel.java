@@ -28,7 +28,6 @@ import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
 import hudson.util.FormValidation;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import javax.servlet.ServletException;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -45,7 +44,7 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
     private final String evaluationDirection;
     private final LoadtestThresholdMetric loadtestThresholdMetric;
     private final ThresholdDirection thresholdDirection;
-    private final int numericValue;
+    private final double numericValue;
 
     public static final List<LoadtestThresholdMetric> metricTypes
             = LoadtestThresholdMetricFactory.getAllMetrics();
@@ -54,7 +53,7 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
             = ThresholdDirectionFactory.getThresholdDirections();
 
     @DataBoundConstructor
-    public LoadtestBuilderThresholdModel(String metricType, String evaluationDirection, int numericValue)
+    public LoadtestBuilderThresholdModel(String metricType, String evaluationDirection, double numericValue)
     {
         this.metricType = metricType;
         this.evaluationDirection = evaluationDirection;
@@ -83,7 +82,7 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
         return thresholdDirection;
     }
 
-    public int getNumericValue()
+    public double getNumericValue()
     {
         return numericValue;
     }
@@ -112,16 +111,16 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
         {
             if (value.length() == 0)
             {
-                return FormValidation.error("Please insert a valid positive integer.");
+                return FormValidation.error("Please insert a valid positive numeric value.");
             }
             if (!isNumeric(value))
             {
-                return FormValidation.error("Please insert a valid positive integer.");
+                return FormValidation.error("Please insert a valid positive numeric value.");
             }
-            int converted = Integer.parseInt(value);
+            double converted = Double.parseDouble(value);
             if (converted < 0)
             {
-                return FormValidation.error("Please insert a valid positive integer.");
+                return FormValidation.error("Please insert a valid positive numeric value.");
             }
             return FormValidation.ok();
         }
@@ -130,7 +129,7 @@ public class LoadtestBuilderThresholdModel extends AbstractDescribableImpl<Loadt
         {
             try
             {
-                int d = Integer.parseInt(str);
+                double d = Double.parseDouble(str);
             } catch (NumberFormatException nfe)
             {
                 return false;

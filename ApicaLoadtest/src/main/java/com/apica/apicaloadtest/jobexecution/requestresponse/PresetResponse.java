@@ -21,23 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
+package com.apica.apicaloadtest.jobexecution.requestresponse;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * @author andras.nemes
  */
-public class GreaterThan extends ThresholdDirection
+public class PresetResponse
 {
-    public GreaterThan()
+    @SerializedName("presetexists")
+    private boolean presetExists;
+    @SerializedName("exception")
+    private String exception;
+    @SerializedName("testinstanceid")
+    private int testInstanceId;
+
+    public int getTestInstanceId()
     {
-        super("gt", "greater than");
+        return testInstanceId;
     }
 
-    @Override
-    public boolean thresholdBroken(double threshold, double actual)
+    public void setTestInstanceId(int testInstanceId)
     {
-        return actual > threshold;
+        this.testInstanceId = testInstanceId;
     }
-    
+
+    public boolean isPresetExists()
+    {
+        return presetExists;
+    }
+
+    public void setPresetExists(boolean presetExists)
+    {
+        this.presetExists = presetExists;
+    }
+
+    public String getException()
+    {
+        return exception;
+    }
+
+    public void setException(String exception)
+    {
+        this.exception = exception;
+    }
 }

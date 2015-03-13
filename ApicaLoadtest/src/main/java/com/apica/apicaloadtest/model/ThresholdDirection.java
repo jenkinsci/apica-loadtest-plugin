@@ -52,4 +52,6 @@ public abstract class ThresholdDirection
     {
         return this.value.equalsIgnoreCase(shortDescription);
     }
+    
+    public abstract boolean thresholdBroken(double threshold, double actual);
 }

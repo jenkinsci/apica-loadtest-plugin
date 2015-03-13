@@ -21,39 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.infrastructure;
-
-import com.google.gson.annotations.SerializedName;
+package com.apica.apicaloadtest.utils;
 
 /**
  *
  * @author andras.nemes
  */
-public class RunnableFileResponse
+public class Utils
 {
-
-    @SerializedName("fileexists")
-    private boolean fileExists;
-    @SerializedName("exception")
-    private String exception;
-
-    public boolean isFileExists()
+    public static boolean isNullOrEmpty(String s)
     {
-        return fileExists;
-    }
-
-    public void setFileExists(boolean fileExists)
-    {
-        this.fileExists = fileExists;
-    }
-
-    public String getException()
-    {
-        return exception;
-    }
-
-    public void setException(String exception)
-    {
-        this.exception = exception;
+        if (s == null)
+        {
+            return true;
+        }
+        if (s.length() == 0)
+        {
+            return true;
+        }
+        if (s.trim().equals(""))
+        {
+            return true;
+        }
+        if (s.equals(""))
+        {
+            return true;
+        }
+        return false;
     }
 }

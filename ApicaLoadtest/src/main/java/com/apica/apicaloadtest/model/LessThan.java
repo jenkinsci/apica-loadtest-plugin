@@ -34,5 +34,10 @@ public class LessThan extends ThresholdDirection
     {
         super("lt", "less than");
     }
-    
+
+    @Override
+    public boolean thresholdBroken(double threshold, double actual)
+    {
+        return actual < threshold;        
+    }    
 }

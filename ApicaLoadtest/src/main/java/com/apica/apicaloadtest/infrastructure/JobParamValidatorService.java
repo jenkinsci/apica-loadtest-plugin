@@ -23,8 +23,11 @@
  */
 package com.apica.apicaloadtest.infrastructure;
 
+import com.apica.apicaloadtest.jobexecution.requestresponse.PresetResponse;
+import com.apica.apicaloadtest.jobexecution.requestresponse.RunnableFileResponse;
 import com.apica.apicaloadtest.environment.LoadtestEnvironment;
 import com.apica.apicaloadtest.jobexecution.validation.JobParamsValidationResult;
+import com.apica.apicaloadtest.utils.Utils;
 
 /**
  *
@@ -37,28 +40,40 @@ public class JobParamValidatorService
             String loadtestScenario, LoadtestEnvironment le)
     {
         JobParamsValidationResult res = new JobParamsValidationResult();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder summaryBuilder = new StringBuilder();
+        String NL = System.getProperty("line.separator");
         res.setAllParamsPresent(true);
-        if (isNullOrEmpty(authToken))
+
+        if (Utils.isNullOrEmpty(authToken))
         {
             res.setAuthTokenException("Auth token cannot be empty");
+            summaryBuilder.append("Unable to retrieve the LTP auth token. Please re-enter it on the setup page. ").append(NL);
+            res.setAllParamsPresent(false);
         }
-        if (isNullOrEmpty(presetName))
+        if (Utils.isNullOrEmpty(presetName))
         {
             res.setPresetNameException("Preset name cannot be empty");
+            summaryBuilder.append("Unable to retrieve the loadtest preset name. Please re-enter it on the setup page. ").append(NL);
+            res.setAllParamsPresent(false);
         }
-        if (isNullOrEmpty(loadtestScenario))
+        if (Utils.isNullOrEmpty(loadtestScenario))
         {
             res.setPresetNameException("Loadtest scenario cannot be empty");
+            summaryBuilder.append("Unable to retrieve the loadtest file name. Please re-enter it on the setup page. ").append(NL);
+            res.setAllParamsPresent(false);
         }
         if (!fileIsClass(loadtestScenario) && !fileIsZip(loadtestScenario))
         {
             res.setPresetNameException("Load test file name must be either a .class or .zip file.");
+            summaryBuilder.append("Unable to resolve the loadtest file name. Load test file name must be either a .class or .zip file. ").append(NL);
+            res.setAllParamsPresent(false);
         }
         ServerSideLtpApiWebService serverSideService = new ServerSideLtpApiWebService(le);
         PresetResponse presetResponse = serverSideService.checkPreset(authToken, presetName);
         if (!presetResponse.isPresetExists())
         {
+            summaryBuilder.append("Cannot find this preset: ").append(presetName).append(". ").append(NL);
+            res.setAllParamsPresent(false);
             if (presetResponse.getException() != null && !presetResponse.getException().equals(""))
             {
                 res.setPresetNameException("Exception while checking preset: ".concat(presetResponse.getException()));
@@ -71,6 +86,8 @@ public class JobParamValidatorService
             if (presetResponse.getTestInstanceId() < 1)
             {
                 res.setPresetNameException("The preset is not linked to a valid test instance. Please check in LTP if you have selected an existing test instance for the preset.");
+                summaryBuilder.append("The preset is not linked to a valid test instance. Please check in LTP if you have selected an existing test instance for the preset").append(NL);
+                res.setAllParamsPresent(false);
             }
         }
 
@@ -85,26 +102,26 @@ public class JobParamValidatorService
                 res.setScenarioFileException("No such load test file found: ".concat(loadtestScenario));
             }
         }
-        
+
+        res.setExceptionMessage(summaryBuilder.toString());
         return res;
     }
-    
+
     public boolean paramValueOkClientSide(String paramValue)
     {
-        if (isNullOrEmpty(paramValue))
+        if (Utils.isNullOrEmpty(paramValue))
         {
             return false;
         }
         return true;
     }
-    
+
     public boolean scenarioNameOkClientSide(String scenarioFileName)
     {
-        if (isNullOrEmpty(scenarioFileName))
+        if (Utils.isNullOrEmpty(scenarioFileName))
         {
             return false;
-        }
-        else if (!fileIsClass(scenarioFileName) && !fileIsZip(scenarioFileName))
+        } else if (!fileIsClass(scenarioFileName) && !fileIsZip(scenarioFileName))
         {
             return false;
         }
@@ -121,24 +138,4 @@ public class JobParamValidatorService
         return fileName.endsWith(".class");
     }
 
-    private boolean isNullOrEmpty(String s)
-    {
-        if (s == null)
-        {
-            return true;
-        }
-        if (s.length() == 0)
-        {
-            return true;
-        }
-        if (s.trim().equals(""))
-        {
-            return true;
-        }
-        if (s.equals(""))
-        {
-            return true;
-        }
-        return false;
-    }
 }

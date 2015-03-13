@@ -21,23 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
+package com.apica.apicaloadtest.jobexecution.requestresponse;
+
+import com.apica.apicaloadtest.infrastructure.JobStatusRequest;
 
 /**
  *
  * @author andras.nemes
  */
-public class GreaterThan extends ThresholdDirection
+public class LoadtestJobSummaryRequest extends JobStatusRequest
 {
-    public GreaterThan()
-    {
-        super("gt", "greater than");
-    }
-
-    @Override
-    public boolean thresholdBroken(double threshold, double actual)
-    {
-        return actual > threshold;
-    }
     
 }

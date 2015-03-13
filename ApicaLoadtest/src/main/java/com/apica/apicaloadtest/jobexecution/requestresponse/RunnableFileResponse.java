@@ -21,23 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
+package com.apica.apicaloadtest.jobexecution.requestresponse;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  *
  * @author andras.nemes
  */
-public class GreaterThan extends ThresholdDirection
+public class RunnableFileResponse
 {
-    public GreaterThan()
+
+    @SerializedName("fileexists")
+    private boolean fileExists;
+    @SerializedName("exception")
+    private String exception;
+
+    public boolean isFileExists()
     {
-        super("gt", "greater than");
+        return fileExists;
     }
 
-    @Override
-    public boolean thresholdBroken(double threshold, double actual)
+    public void setFileExists(boolean fileExists)
     {
-        return actual > threshold;
+        this.fileExists = fileExists;
     }
-    
+
+    public String getException()
+    {
+        return exception;
+    }
+
+    public void setException(String exception)
+    {
+        this.exception = exception;
+    }
 }

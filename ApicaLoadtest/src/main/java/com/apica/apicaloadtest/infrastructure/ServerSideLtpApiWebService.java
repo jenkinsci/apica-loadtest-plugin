@@ -23,12 +23,24 @@
  */
 package com.apica.apicaloadtest.infrastructure;
 
+import com.apica.apicaloadtest.jobexecution.requestresponse.TransmitJobPresetArgs;
+import com.apica.apicaloadtest.jobexecution.requestresponse.TransmitJobRequestArgs;
+import com.apica.apicaloadtest.jobexecution.requestresponse.PresetResponse;
+import com.apica.apicaloadtest.jobexecution.requestresponse.RunnableFileResponse;
 import com.apica.apicaloadtest.environment.LoadtestEnvironment;
+import com.apica.apicaloadtest.jobexecution.requestresponse.JobStatusResponse;
+import com.apica.apicaloadtest.jobexecution.requestresponse.LoadtestJobSummaryRequest;
+import com.apica.apicaloadtest.jobexecution.requestresponse.LoadtestJobSummaryResponse;
+import com.apica.apicaloadtest.jobexecution.requestresponse.StartJobByPresetResponse;
+import com.apica.apicaloadtest.utils.Utils;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -63,7 +75,7 @@ public class ServerSideLtpApiWebService
             String tokenExtension = tokenQueryStub.concat("=").concat(authToken);
             URI presetUri = new URI(scheme, null, baseLtpApiUri, port, separator.concat(uriVersion).concat(separator)
                     .concat(presetUriExtension).concat(separator).concat(presetName), tokenExtension, null);
-            WebRequestOutcome presetRequestOutcome = makeWebRequest(presetUri);
+            WebRequestOutcome presetRequestOutcome = makeBodyLessWebRequest(presetUri);
             if (presetRequestOutcome.isWebRequestSuccessful())
             {
                 if (presetRequestOutcome.getHttpResponseCode() < 300)
@@ -96,7 +108,7 @@ public class ServerSideLtpApiWebService
             String tokenExtension = tokenQueryStub.concat("=").concat(authToken);
             URI fileUri = new URI(scheme, null, baseLtpApiUri, port, separator.concat(uriVersion).concat(separator)
                     .concat(fileUriExtension).concat(separator).concat(fileName), tokenExtension, null);
-            WebRequestOutcome fileRequestOutcome = makeWebRequest(fileUri);
+            WebRequestOutcome fileRequestOutcome = makeBodyLessWebRequest(fileUri);
             if (fileRequestOutcome.isWebRequestSuccessful())
             {
                 if (fileRequestOutcome.getHttpResponseCode() < 300)
@@ -118,7 +130,163 @@ public class ServerSideLtpApiWebService
         return runnableFileResponse;
     }
     
-    private WebRequestOutcome makeWebRequest(URI uri)
+    public StartJobByPresetResponse transmitJob(TransmitJobRequestArgs transmitJobArgs) throws URISyntaxException
+    {
+        StartJobByPresetResponse resp = new StartJobByPresetResponse();
+        String startByPresetUriExtension = "selfservicejobs/preset";
+        String authToken = transmitJobArgs.getAuthToken();
+        String tokenExtension = tokenQueryStub.concat("=").concat(authToken);
+        URI startByPresetUri = new URI(scheme, null, baseLtpApiUri, port, separator.concat(uriVersion)
+                .concat(separator).concat(startByPresetUriExtension), tokenExtension, null);
+        resp.setException("");
+        resp.setJobId(-1);
+        HttpUrlConnectionArguments connectionArgs = new HttpUrlConnectionArguments();
+        connectionArgs.setContentType("application/json");
+        connectionArgs.setWebMethod("POST");
+        connectionArgs.setAuthToken(transmitJobArgs.getAuthToken());
+        Gson gson = new com.google.gson.Gson();
+        TransmitJobPresetArgs presetArgs = new TransmitJobPresetArgs(transmitJobArgs.getPresetName(), transmitJobArgs.getFileName());
+        String jsonifiedPresetArgs = gson.toJson(presetArgs);
+        connectionArgs.setRequestBody(jsonifiedPresetArgs);
+        connectionArgs.setUri(startByPresetUri);
+        try
+        {
+            HttpURLConnection con = buildUrlRequest(connectionArgs);
+            int responseCode = con.getResponseCode();
+            if (responseCode < 300)
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+
+                resp = gson.fromJson(response.toString(), StartJobByPresetResponse.class);
+            } else
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                resp.setException(response.toString());
+            }
+        }catch (Exception ex)
+        {
+            resp.setException(ex.getMessage());
+        }
+        return resp;
+    }
+    
+    public JobStatusResponse checkJobStatus(JobStatusRequest jobStatusRequest) throws URISyntaxException
+    {
+        JobStatusResponse resp = new JobStatusResponse();
+        resp.setException("");
+        String jobStatusExtension = "selfservicejobs";
+        int jobId = jobStatusRequest.getJobId();
+        String authToken = jobStatusRequest.getAuthToken();
+        String tokenExtension = tokenQueryStub.concat("=").concat(authToken);
+        URI jobStatusUri = new URI(scheme, null, baseLtpApiUri,
+                        port, separator.concat(uriVersion).concat(separator).concat(jobStatusExtension)
+                        .concat(separator).concat(Integer.toString(jobId)), tokenExtension, null);
+        HttpUrlConnectionArguments connectionArgs = new HttpUrlConnectionArguments();
+        connectionArgs.setWebMethod("GET");
+        connectionArgs.setAuthToken(jobStatusRequest.getAuthToken());
+        connectionArgs.setUri(jobStatusUri);
+        Gson gson = new Gson();
+        try
+        {
+            HttpURLConnection con = buildUrlRequest(connectionArgs);
+            int responseCode = con.getResponseCode();
+            if (responseCode < 300)
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                resp = gson.fromJson(response.toString(), JobStatusResponse.class);
+            } else
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                resp.setException(response.toString());
+            }
+        } catch (JsonSyntaxException ex)
+        {
+            resp.setException("Json exception: ".concat(ex.getMessage()));
+        } catch (IOException ex)
+        {
+            resp.setException(ex.getMessage());
+        }
+        return resp;
+    }
+    
+    public LoadtestJobSummaryResponse getJobSummaryResponse(LoadtestJobSummaryRequest summaryRequest) throws URISyntaxException
+    {
+        LoadtestJobSummaryResponse resp = new LoadtestJobSummaryResponse();
+        resp.setException("");
+        String summaryEndpoint = "summary";
+        String jobStatusExtension = "selfservicejobs";
+        String authToken = summaryRequest.getAuthToken();
+        String tokenExtension = tokenQueryStub.concat("=").concat(authToken);
+        int jobId = summaryRequest.getJobId();
+        URI jobSummaryUri = new URI(scheme, null, baseLtpApiUri, port,
+                            (separator).concat(uriVersion).concat(separator).concat(jobStatusExtension)
+                            .concat(separator).concat(Integer.toString(jobId).concat(separator)
+                                    .concat(summaryEndpoint)), tokenExtension, null);
+        HttpUrlConnectionArguments connectionArgs = new HttpUrlConnectionArguments();
+        connectionArgs.setWebMethod("GET");
+        connectionArgs.setAuthToken(authToken);
+        connectionArgs.setUri(jobSummaryUri);
+        Gson gson = new Gson();
+        try
+        {
+            HttpURLConnection con = buildUrlRequest(connectionArgs);
+            int responseCode = con.getResponseCode();
+            if (responseCode < 300)
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                resp = gson.fromJson(response.toString(), LoadtestJobSummaryResponse.class);
+            } else
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
+                resp.setException(response.toString());
+            }
+        } catch (Exception ex)
+        {
+            resp.setException(ex.getMessage());
+        }
+        return resp;
+    }
+    
+    private WebRequestOutcome makeBodyLessWebRequest(URI uri)
     {
         WebRequestOutcome outcome = new WebRequestOutcome();
         outcome.setExceptionMessage("");
@@ -177,5 +345,26 @@ public class ServerSideLtpApiWebService
             outcome.setRawResponseContent("");
         }
         return outcome;
+    }
+    
+    private HttpURLConnection buildUrlRequest(HttpUrlConnectionArguments connectionArguments) throws MalformedURLException, IOException
+    {
+        HttpURLConnection connection = null;
+        URL url = connectionArguments.getUri().toURL();
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod(connectionArguments.getWebMethod());
+        if (!Utils.isNullOrEmpty(connectionArguments.getContentType()))
+        {
+            connection.setRequestProperty("Content-Type", connectionArguments.getContentType());
+        }
+        if (!Utils.isNullOrEmpty(connectionArguments.getRequestBody()))
+        {
+            connection.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
+            wr.writeBytes(connectionArguments.getRequestBody());
+            wr.flush();
+            wr.close();
+        }
+        return connection;
     }
 }

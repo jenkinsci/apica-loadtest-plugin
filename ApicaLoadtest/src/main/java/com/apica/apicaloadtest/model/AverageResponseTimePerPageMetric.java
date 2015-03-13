@@ -23,6 +23,8 @@
  */
 package com.apica.apicaloadtest.model;
 
+import com.apica.apicaloadtest.jobexecution.PerformanceSummary;
+
 /**
  *
  * @author andras.nemes
@@ -32,7 +34,13 @@ public class AverageResponseTimePerPageMetric extends LoadtestThresholdMetric
 
     public AverageResponseTimePerPageMetric()
     {
-        super("resp_time_per_page", "Average response time per page", "ms");
+        super("resp_time_per_page", "Average response time per page", "sec");
+    }
+
+    @Override
+    public double extractActualValueFrom(PerformanceSummary performanceSummary)
+    {
+        return performanceSummary.getAverageResponseTimePerPage();
     }
     
 }
