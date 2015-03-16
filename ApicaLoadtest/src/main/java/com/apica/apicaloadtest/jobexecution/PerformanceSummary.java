@@ -54,6 +54,13 @@ public class PerformanceSummary
     @SerializedName("Total transmitted bytes")
     private long totalTransmittedBytes;
 
+    public PerformanceSummary()
+    {
+        
+    }
+
+    
+    
     public int getTotalPassedLoops()
     {
         return totalPassedLoops;

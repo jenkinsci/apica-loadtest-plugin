@@ -5,6 +5,8 @@ import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
 import com.apica.apicaloadtest.infrastructure.JobParamValidatorService;
 import com.apica.apicaloadtest.infrastructure.JobStatusRequest;
 import com.apica.apicaloadtest.infrastructure.ServerSideLtpApiWebService;
+import com.apica.apicaloadtest.jobexecution.PerformanceSummary;
+import com.apica.apicaloadtest.jobexecution.RunLoadtestJobResult;
 import com.apica.apicaloadtest.jobexecution.requestresponse.JobStatusResponse;
 import com.apica.apicaloadtest.jobexecution.requestresponse.LoadtestJobSummaryRequest;
 import com.apica.apicaloadtest.jobexecution.requestresponse.TransmitJobRequestArgs;
@@ -15,9 +17,10 @@ import com.apica.apicaloadtest.model.LoadtestBuilderModel;
 import com.apica.apicaloadtest.model.LoadtestBuilderThresholdModel;
 import com.apica.apicaloadtest.model.Threshold;
 import com.apica.apicaloadtest.model.ThresholdEvaluationResult;
+import com.apica.apicaloadtest.report.LoadTestSummary;
+import com.apica.apicaloadtest.report.LoadTestTrend;
 import hudson.Launcher;
 import hudson.Extension;
-import hudson.FilePath;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.AbstractProject;
@@ -31,11 +34,10 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import java.util.List;
-import jenkins.model.ArtifactManager;
-import jenkins.util.VirtualFile;
 
 public class LoadtestBuilder extends Builder
 {
+
     private static final String artifactsDirectoryName = "archive";
     public static final String artifactsResourceName = "artifact";
     private final LoadtestBuilderModel loadtestBuilderModel;
@@ -61,14 +63,18 @@ public class LoadtestBuilder extends Builder
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
     {
-        
+
         List<Threshold> thresholds = new ArrayList<>();
-        for (LoadtestBuilderThresholdModel loadtestThresholdParameter : loadtestBuilderModel.getLoadtestThresholdParameters())
+        List<LoadtestBuilderThresholdModel> loadtestThresholdParameters = loadtestBuilderModel.getLoadtestThresholdParameters();
+        if (loadtestThresholdParameters != null && !loadtestThresholdParameters.isEmpty())
         {
-            Threshold t = new Threshold(loadtestThresholdParameter.getLoadtestThresholdMetric(),
-                    loadtestThresholdParameter.getThresholdDirection(),
-                    loadtestThresholdParameter.getNumericValue());
-            thresholds.add(t);
+            for (LoadtestBuilderThresholdModel loadtestThresholdParameter : loadtestBuilderModel.getLoadtestThresholdParameters())
+            {
+                Threshold t = new Threshold(loadtestThresholdParameter.getLoadtestThresholdMetric(),
+                        loadtestThresholdParameter.getThresholdDirection(),
+                        loadtestThresholdParameter.getNumericValue());
+                thresholds.add(t);
+            }
         }
         PrintStream logger = listener.getLogger();
         logger.println("Apica Loadtest starting...");
@@ -91,21 +97,30 @@ public class LoadtestBuilder extends Builder
                 logger.println(threshold);
             }
         }
+
+        RunLoadtestJobResult runLoadtestJob = runLoadtestJob(logger, thresholds);
+        boolean res = runLoadtestJob.isSuccess();
+        PerformanceSummary performanceSummary = runLoadtestJob.getPerformanceSummary();
+        if (performanceSummary != null)
+        {
+            build.addAction(new LoadTestSummary(build, performanceSummary, loadtestBuilderModel.getPresetName()));
+        }
+        if (res)
+        {
+            listener.finished(Result.SUCCESS);
+        }
+        else
+        {
+            listener.finished(Result.FAILURE);
+        }
         
-        logger.println("Exploring AbstractBuild object...");
-        ArtifactManager artifactManager = build.getArtifactManager();
-        VirtualFile root = artifactManager.root();
-        logger.println("Artifact manager root: " + root.getName());
-        
-        FilePath moduleRoot = build.getModuleRoot();
-        logger.println("Module root: " + moduleRoot.getName());
-        
-        return true;
-        //return runLoadtestJob(logger, thresholds);
+        build.addAction(new LoadTestTrend(build));
+        return res;
     }
 
-    private boolean runLoadtestJob(PrintStream logger, List<Threshold> thresholds)
+    private RunLoadtestJobResult runLoadtestJob(PrintStream logger, List<Threshold> thresholds)
     {
+        RunLoadtestJobResult res = new RunLoadtestJobResult();
         LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(loadtestBuilderModel.getEnvironmentShortName());
         ServerSideLtpApiWebService loadtestService = new ServerSideLtpApiWebService(le);;
         logger.println("Attempting to initiate load test...");
@@ -147,7 +162,7 @@ public class LoadtestBuilder extends Builder
                     summaryRequest.setJobId(jobId);
                     summaryRequest.setAuthToken(authToken);
                     LoadtestJobSummaryResponse summaryResponse = loadtestService.getJobSummaryResponse(summaryRequest);
-
+                    res.setPerformanceSummary(summaryResponse.getPerformanceSummary());
                     logJobSummary(summaryResponse, logger);
                     if (!thresholds.isEmpty())
                     {
@@ -183,7 +198,8 @@ public class LoadtestBuilder extends Builder
             logger.println(ex.getMessage());
             success = false;
         }
-        return success;
+        res.setSuccess(success);
+        return res;
     }
 
     private JobParamsValidationResult validateJobParams()

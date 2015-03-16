@@ -12,13 +12,13 @@
     </f:section>
     <f:section title="Installation">
         <f:entry title="LTP authentication token: *" field="authToken">
-            <f:textbox class="medium-textbox" style="width: 200px;">${authToken}</f:textbox>
+            <f:textbox class="medium-textbox" style="width: 300px;">${authToken}</f:textbox>
         </f:entry>
         <f:entry title="Preset name: *" field="presetName">
-            <f:textbox class="medium-textbox" style="width: 200px;">${presetName}</f:textbox>
+            <f:textbox class="medium-textbox" style="width: 300px;">${presetName}</f:textbox>
         </f:entry>
         <f:entry title="Load test scenario: *" field="loadtestScenario">
-            <f:textbox class="medium-textbox" style="width: 200px;">${loadtestScenario}</f:textbox>
+            <f:textbox class="medium-textbox" style="width: 300px;">${loadtestScenario}</f:textbox>
         </f:entry>
         <f:validateButton title="Test settings" progress="Testing..." 
             method="testSettings" with="environmentShortName,authToken,presetName,loadtestScenario"/>

@@ -21,30 +21,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
+package com.apica.apicaloadtest.report;
 
-import com.apica.apicaloadtest.jobexecution.PerformanceSummary;
+import hudson.model.AbstractBuild;
+import hudson.model.Action;
 
 /**
  *
  * @author andras.nemes
  */
-public class FailedLoopsRateMetric extends LoadtestThresholdMetric
+public class LoadTestTrend implements Action
 {
+    private final AbstractBuild<?, ?> build;
 
-    public FailedLoopsRateMetric()
+    public LoadTestTrend(AbstractBuild<?, ?> build)
     {
-        super("failed_loops", "Failed loops rate (%)", "%");
+        this.build = build;
+    }
+
+    public AbstractBuild<?, ?> getBuild()
+    {
+        return build;
+    }
+    
+    @Override
+    public String getIconFileName()
+    {
+        return "graph.png";
     }
 
     @Override
-    public double extractActualValueFrom(PerformanceSummary performanceSummary)
+    public String getDisplayName()
     {
-        int passedLoops = performanceSummary.getTotalPassedLoops();
-        int failedLoops = performanceSummary.getTotalFailedLoops();
-        int totalLoops = passedLoops + failedLoops;
-        double failedLoopsShare = (double) (failedLoops * 100.0) / (double) (totalLoops * 100.0);
-        return failedLoopsShare;
+        return "Apica loadtest trends";
     }
 
+    @Override
+    public String getUrlName()
+    {
+        return "loadtest-trends";
+    }
+    
 }

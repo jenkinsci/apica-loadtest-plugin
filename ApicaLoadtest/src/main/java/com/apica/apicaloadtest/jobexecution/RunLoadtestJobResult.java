@@ -21,30 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.apica.apicaloadtest.model;
-
-import com.apica.apicaloadtest.jobexecution.PerformanceSummary;
+package com.apica.apicaloadtest.jobexecution;
 
 /**
  *
  * @author andras.nemes
  */
-public class FailedLoopsRateMetric extends LoadtestThresholdMetric
+public class RunLoadtestJobResult
 {
+    private PerformanceSummary performanceSummary;
+    private boolean success;
 
-    public FailedLoopsRateMetric()
+    public PerformanceSummary getPerformanceSummary()
     {
-        super("failed_loops", "Failed loops rate (%)", "%");
+        return performanceSummary;
     }
 
-    @Override
-    public double extractActualValueFrom(PerformanceSummary performanceSummary)
+    public void setPerformanceSummary(PerformanceSummary performanceSummary)
     {
-        int passedLoops = performanceSummary.getTotalPassedLoops();
-        int failedLoops = performanceSummary.getTotalFailedLoops();
-        int totalLoops = passedLoops + failedLoops;
-        double failedLoopsShare = (double) (failedLoops * 100.0) / (double) (totalLoops * 100.0);
-        return failedLoopsShare;
+        this.performanceSummary = performanceSummary;
     }
 
+    public boolean isSuccess()
+    {
+        return success;
+    }
+
+    public void setSuccess(boolean success)
+    {
+        this.success = success;
+    }
+    
+    
 }
