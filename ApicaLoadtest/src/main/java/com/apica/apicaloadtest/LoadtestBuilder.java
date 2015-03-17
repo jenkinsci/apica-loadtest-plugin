@@ -37,9 +37,6 @@ import java.util.List;
 
 public class LoadtestBuilder extends Builder
 {
-
-    private static final String artifactsDirectoryName = "archive";
-    public static final String artifactsResourceName = "artifact";
     private final LoadtestBuilderModel loadtestBuilderModel;
 
     // Fields in config.jelly must match the parameter names in the "DataBoundConstructor"
@@ -64,7 +61,7 @@ public class LoadtestBuilder extends Builder
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
     {
 
-        List<Threshold> thresholds = new ArrayList<>();
+        List<Threshold> thresholds = new ArrayList<Threshold>();
         List<LoadtestBuilderThresholdModel> loadtestThresholdParameters = loadtestBuilderModel.getLoadtestThresholdParameters();
         if (loadtestThresholdParameters != null && !loadtestThresholdParameters.isEmpty())
         {
@@ -80,6 +77,7 @@ public class LoadtestBuilder extends Builder
         logger.println("Apica Loadtest starting...");
         JobParamsValidationResult validationResult = validateJobParams();
         LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(loadtestBuilderModel.getEnvironmentShortName());
+        
         if (!validationResult.isAllParamsPresent())
         {
             logger.println(validationResult.getExceptionSummary());
@@ -114,7 +112,8 @@ public class LoadtestBuilder extends Builder
             listener.finished(Result.FAILURE);
         }
         
-        build.addAction(new LoadTestTrend(build));
+        build.addAction(new LoadTestTrend(build, 
+                validationResult.getPresetTestInstanceId(), loadtestBuilderModel.getAuthToken(), le));
         return res;
     }
 

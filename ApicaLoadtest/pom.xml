@@ -17,7 +17,7 @@
 
     <name>Apica Loadtest</name>
     <description>Apica Loadtest Jenkins plugin</description>
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
+    <url>https://wiki.jenkins-ci.org/display/JENKINS/ApicaLoadtest</url>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -54,8 +54,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>

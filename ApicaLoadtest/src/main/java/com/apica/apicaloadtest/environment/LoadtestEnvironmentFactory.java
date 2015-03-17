@@ -34,7 +34,7 @@ public class LoadtestEnvironmentFactory
 {
     public static List<LoadtestEnvironment> getLoadtestEnvironments()
     {
-        List<LoadtestEnvironment> envs = new ArrayList<>();
+        List<LoadtestEnvironment> envs = new ArrayList<LoadtestEnvironment>();
         envs.add(new LoadtestProductionEnvironment());
         envs.add(new LoadtestTrialEnvironment());
         return envs;

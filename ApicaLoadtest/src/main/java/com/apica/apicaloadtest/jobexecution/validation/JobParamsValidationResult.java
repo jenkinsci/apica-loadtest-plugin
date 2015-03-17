@@ -30,11 +30,22 @@ package com.apica.apicaloadtest.jobexecution.validation;
 public class JobParamsValidationResult
 {
     private boolean allParamsPresent;
+    private int presetTestInstanceId;
     private String exceptionSummary;
     private String authTokenException;
     private String scenarioFileException;
     private String presetNameException;
 
+    public int getPresetTestInstanceId()
+    {
+        return presetTestInstanceId;
+    }
+
+    public void setPresetTestInstanceId(int presetTestInstanceId)
+    {
+        this.presetTestInstanceId = presetTestInstanceId;
+    }
+    
     public String getAuthTokenException()
     {
         return authTokenException;

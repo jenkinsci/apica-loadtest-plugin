@@ -34,7 +34,7 @@ public class ThresholdDirectionFactory
 {
     public static List<ThresholdDirection> getThresholdDirections()
     {
-        List<ThresholdDirection> dirs = new ArrayList<>();
+        List<ThresholdDirection> dirs = new ArrayList<ThresholdDirection>();
         dirs.add(new GreaterThan());
         dirs.add(new LessThan());
         return dirs;

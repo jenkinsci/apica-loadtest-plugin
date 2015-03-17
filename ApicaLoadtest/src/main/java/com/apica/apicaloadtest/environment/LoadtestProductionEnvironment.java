@@ -52,4 +52,10 @@ public class LoadtestProductionEnvironment extends LoadtestEnvironment
     {
         return shortName.toLowerCase().equals("prod");
     }
+
+    @Override
+    public String getLtpWebPortalRoot()
+    {
+        return "http://loadtest.apicasystem.com/";
+    }
 }

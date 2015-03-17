@@ -45,4 +45,5 @@ public abstract class LoadtestEnvironment implements ExtensionPoint, Describable
     public abstract String getLtpWebServiceBaseUrl();
     public abstract String getLtpWebServiceVersion();
     public abstract boolean isMatch(String shortName);
+    public abstract String getLtpWebPortalRoot();
 }

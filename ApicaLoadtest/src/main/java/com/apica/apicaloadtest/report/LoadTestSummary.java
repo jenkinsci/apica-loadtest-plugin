@@ -38,7 +38,6 @@ public class LoadTestSummary implements Action
     private final PerformanceSummary performanceSummary;
     private final Date buildStartDate;
     private final String presetName;
-    private static final String PLUGIN_NAME = "ApicaLoadtest";
 
     public LoadTestSummary(AbstractBuild<?, ?> build, 
             PerformanceSummary performanceSummary, String presetName)
@@ -72,7 +71,7 @@ public class LoadTestSummary implements Action
     @Override
     public String getUrlName()
     {
-        return PLUGIN_NAME;
+        return "loadtest-summary";
     }
 
     public AbstractBuild<?, ?> getBuild()

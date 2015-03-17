@@ -23,6 +23,7 @@
  */
 package com.apica.apicaloadtest.report;
 
+import com.apica.apicaloadtest.environment.LoadtestEnvironment;
 import hudson.model.AbstractBuild;
 import hudson.model.Action;
 
@@ -33,10 +34,25 @@ import hudson.model.Action;
 public class LoadTestTrend implements Action
 {
     private final AbstractBuild<?, ?> build;
+    private final int presetTestInstance;
+    private final String loadtestPortalCiController = "ContinuousIntegrationTeamCity";
+    private final String resultUrl;
 
-    public LoadTestTrend(AbstractBuild<?, ?> build)
+    public LoadTestTrend(AbstractBuild<?, ?> build, int presetTestInstance, String authToken, LoadtestEnvironment le)
     {
         this.build = build;
+        this.presetTestInstance = presetTestInstance;
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder.append(le.getLtpWebPortalRoot())
+                .append(loadtestPortalCiController)
+                .append("?testInstanceId=").append(this.presetTestInstance)
+                .append("&authToken=").append(authToken);
+        resultUrl = urlBuilder.toString();
+    }
+
+    public String getResultUrl()
+    {
+        return resultUrl;
     }
 
     public AbstractBuild<?, ?> getBuild()

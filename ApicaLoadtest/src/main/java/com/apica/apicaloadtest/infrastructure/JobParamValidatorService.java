@@ -83,6 +83,7 @@ public class JobParamValidatorService
             }
         } else //validate test instance id
         {
+            res.setPresetTestInstanceId(presetResponse.getTestInstanceId());
             if (presetResponse.getTestInstanceId() < 1)
             {
                 res.setPresetNameException("The preset is not linked to a valid test instance. Please check in LTP if you have selected an existing test instance for the preset.");

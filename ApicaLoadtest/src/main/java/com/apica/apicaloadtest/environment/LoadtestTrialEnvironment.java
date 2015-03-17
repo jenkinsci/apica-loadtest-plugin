@@ -52,4 +52,10 @@ public class LoadtestTrialEnvironment extends LoadtestEnvironment
     {
         return shortName.toLowerCase().equals("trial");
     }
+
+    @Override
+    public String getLtpWebPortalRoot()
+    {
+        return "http://loadtest-trial.apicasystem.com/";
+    }
 }

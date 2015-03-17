@@ -34,7 +34,7 @@ public class LoadtestThresholdMetricFactory
 {
     public static List<LoadtestThresholdMetric> getAllMetrics()
     {
-        List<LoadtestThresholdMetric> list = new ArrayList<>();
+        List<LoadtestThresholdMetric> list = new ArrayList<LoadtestThresholdMetric>();
         list.add(new AverageResponseTimePerPageMetric());
         list.add(new FailedLoopsRateMetric());
         return list;
