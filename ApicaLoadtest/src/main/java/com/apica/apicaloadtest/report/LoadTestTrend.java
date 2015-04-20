@@ -45,8 +45,8 @@ public class LoadTestTrend implements Action
         StringBuilder urlBuilder = new StringBuilder();
         urlBuilder.append(le.getLtpWebPortalRoot())
                 .append(loadtestPortalCiController)
-                .append("?testInstanceId=").append(this.presetTestInstance)
-                .append("&authToken=").append(authToken);
+                .append("/").append(this.presetTestInstance)
+                .append("/").append(authToken);
         resultUrl = urlBuilder.toString();
     }
 

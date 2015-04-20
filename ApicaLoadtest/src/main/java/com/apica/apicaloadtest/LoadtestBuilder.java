@@ -60,7 +60,6 @@ public class LoadtestBuilder extends Builder
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
     {
-
         List<Threshold> thresholds = new ArrayList<Threshold>();
         List<LoadtestBuilderThresholdModel> loadtestThresholdParameters = loadtestBuilderModel.getLoadtestThresholdParameters();
         if (loadtestThresholdParameters != null && !loadtestThresholdParameters.isEmpty())
@@ -117,6 +116,9 @@ public class LoadtestBuilder extends Builder
         return res;
     }
 
+    
+           
+    
     private RunLoadtestJobResult runLoadtestJob(PrintStream logger, List<Threshold> thresholds)
     {
         RunLoadtestJobResult res = new RunLoadtestJobResult();
