@@ -40,13 +40,11 @@
             <organizationUrl>http://www.apicasystem.com</organizationUrl>
         </developer>
     </developers>
-    <!-- Assuming you want to host on @jenkinsci:
-   <scm>
-     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-     <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
-   </scm>
-    -->
+    <scm>
+        <connection>scm:git:git://github.com/jenkinsci/apica-loadtest-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:jenkinsci/apica-loadtest-plugin.git</developerConnection>
+        <url>jenkinsci/apica-loadtest-plugin.git</url>
+    </scm>
     <build>
         <plugins>
             <plugin>
