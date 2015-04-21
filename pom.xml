@@ -43,7 +43,6 @@
         <connection>scm:git:git://github.com/jenkinsci/apica-loadtest-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/apica-loadtest-plugin.git</developerConnection>
         <url>jenkinsci/apica-loadtest-plugin.git</url>
-        <tag>ApicaLoadtest-1.0</tag>
     </scm>
     <build>
         <plugins>
