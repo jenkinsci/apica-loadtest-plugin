@@ -1,0 +1,21 @@
+<j:jelly excapeText="false" xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" 
+    xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+  <l:layout css="${rootURL}/plugin/ApicaLoadtest/style.css" norefresh="true">    
+    <st:include it="${it.build}" page="sidepanel.jelly" />
+    <l:main-panel>
+        <div id="self-service-summary">
+            <img src="${rootURL}/plugin/ApicaLoadtest/apica-loadtest-logo.png" />
+            <h2>Apica Load Test Trends</h2>
+
+            <iframe id="apica-ci-container" width="1200" height="1000" src="${it.resultUrl}" >
+                <p>Your browser does not support iframes.</p>
+                <p>Please, go directly to the <a href="${it.resultUrl}">results page at Apica System</a>.</p>
+            </iframe>
+
+        </div>
+    </l:main-panel>
+  </l:layout>
+
+    
+</j:jelly>
