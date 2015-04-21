@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -7,11 +8,11 @@
         <artifactId>plugin</artifactId>
         <!-- Baseline Jenkins version you use to build and test the plugin. Users must have this version or newer to run. -->
         <version>1.609</version>
-        <relativePath />
+        <relativePath/>
     </parent>
     <groupId>com.apica</groupId>
     <artifactId>ApicaLoadtest</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>Apica Loadtest</name>
@@ -40,9 +41,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:ssh://github.com/jenkinsci/apica-loadtest-plugin.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/apica-loadtest-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/apica-loadtest-plugin</url>
+        <connection>scm:git:git://github.com/jenkinsci/apica-loadtest-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:jenkinsci/apica-loadtest-plugin.git</developerConnection>
+        <url>jenkinsci/apica-loadtest-plugin.git</url>
     </scm>
     <build>
         <plugins>
@@ -67,24 +68,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.1</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-scm-plugin</artifactId>
-                        <version>1.8.1</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>1.9.2</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            
         </plugins>
     </build>
     <repositories>
