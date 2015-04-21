@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -8,11 +7,11 @@
         <artifactId>plugin</artifactId>
         <!-- Baseline Jenkins version you use to build and test the plugin. Users must have this version or newer to run. -->
         <version>1.609</version>
-        <relativePath/>
+        <relativePath />
     </parent>
     <groupId>com.apica</groupId>
     <artifactId>ApicaLoadtest</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>Apica Loadtest</name>
@@ -44,7 +43,8 @@
         <connection>scm:git:git://github.com/jenkinsci/apica-loadtest-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/apica-loadtest-plugin.git</developerConnection>
         <url>jenkinsci/apica-loadtest-plugin.git</url>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
     <build>
         <plugins>
             <plugin>
