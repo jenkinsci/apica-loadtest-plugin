@@ -1,0 +1,61 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <l:layout css="${rootURL}/plugin/ApicaLoadtest/style.css" norefresh="true">
+    <st:include it="${it.build}" page="sidepanel.jelly" />
+    <l:main-panel>
+        <div id="self-service-summary">
+            <img src="${rootURL}/plugin/ApicaLoadtest/apica-loadtest-logo.png" />
+            <h2>Apica Load Test Summary</h2>
+            <table>
+                <tr>
+                    <th>Preset name</th>
+                    <td>${it.presetName}</td>
+                </tr>
+                <tr>
+                    <th>Date UTC</th>
+                    <td>${it.buildStartDate}</td>
+                </tr>
+                <tr>
+                    <th>Total passed loops</th>
+                    <td>${it.performanceSummary.totalPassedLoops}</td>
+                </tr>
+                <tr>
+                    <th>Total failed loops</th>
+                    <td>${it.performanceSummary.totalFailedLoops}</td>
+                </tr>
+                <tr>
+                    <th>Average network throughput</th>
+                    <td>${it.performanceSummary.averageNetworkThroughput} ${it.performanceSummary.networkThroughputUnit}</td>
+                </tr>
+                <tr>
+                    <th>Average session time per loop (s)</th>
+                    <td>${it.performanceSummary.averageSessionTimePerLoop}</td>
+                </tr>
+                <tr>
+                    <th>Average response time per loop (s)</th>
+                    <td>${it.performanceSummary.averageResponseTimePerLoop}</td>
+                </tr>
+                <tr>
+                    <th>Web transaction rate (Hits/s)</th>
+                    <td>${it.performanceSummary.webTransactionRate}</td>
+                </tr>
+                <tr>
+                    <th>Average response time per page (s)</th>
+                    <td>${it.performanceSummary.averageResponseTimePerPage}</td>
+                </tr>
+                <tr>
+                    <th>Total http(s) calls</th>
+                    <td>${it.performanceSummary.totalHttpCalls}</td>
+                </tr>
+                <tr>
+                    <th>Avg network connect time (ms)</th>
+                    <td>${it.performanceSummary.averageNetworkConnectTime}</td>
+                </tr>
+                <tr>
+                    <th>Total transmitted bytes</th>
+                    <td>${it.performanceSummary.totalTransmittedBytes}</td>
+                </tr>
+            </table>
+        </div>
+    </l:main-panel>
+  </l:layout>
+</j:jelly>
