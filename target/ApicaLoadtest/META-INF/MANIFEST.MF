@@ -5,13 +5,13 @@ Build-Jdk: 1.7.0_51
 Extension-Name: ApicaLoadtest
 Specification-Title: Apica Loadtest Jenkins plugin
 Implementation-Title: ApicaLoadtest
-Implementation-Version: 1.0
+Implementation-Version: 1.1
 Group-Id: com.apica
 Short-Name: ApicaLoadtest
 Long-Name: Apica Loadtest
-Url: https://wiki.jenkins-ci.org/display/JENKINS/apica-loadtest
-Plugin-Version: 1.0
-Hudson-Version: 1.609
-Jenkins-Version: 1.609
+Url: https://wiki.jenkins-ci.org/display/JENKINS/Apica+Loadtest
+Plugin-Version: 1.1
+Hudson-Version: 1.610
+Jenkins-Version: 1.610
 Plugin-Developers: Andras Nemes:andrasnemes:andras.nemes@apicasystem.com
 

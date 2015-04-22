@@ -1,10 +1,10 @@
-matrix-project
-antisamy-markup-formatter
-junit
+matrix-auth
 javadoc
 mailer
+ant
+antisamy-markup-formatter
+matrix-project
+script-security
 subversion
 maven-plugin
-script-security
-ant
-matrix-auth
+junit
