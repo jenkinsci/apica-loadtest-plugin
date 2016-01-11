@@ -10,7 +10,7 @@ Group-Id: com.apica
 Short-Name: ApicaLoadtest
 Long-Name: Apica Loadtest
 Url: https://wiki.jenkins-ci.org/display/JENKINS/Apica+Loadtest
-Plugin-Version: 1.6-SNAPSHOT (private-0c1d8db2-andras.nemes)
+Plugin-Version: 1.6-SNAPSHOT (private-39b88e56-andras.nemes)
 Hudson-Version: 1.610
 Jenkins-Version: 1.610
 Plugin-Developers: Andras Nemes:andrasnemes:andras.nemes@apicasystem.com
