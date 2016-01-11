@@ -1,16 +1,16 @@
 Manifest-Version: 1.0
 Built-By: andras.nemes
 Created-By: Apache Maven
-Build-Jdk: 1.7.0_51
+Build-Jdk: 1.8.0_20
 Extension-Name: ApicaLoadtest
 Specification-Title: Apica Loadtest Jenkins plugin
 Implementation-Title: ApicaLoadtest
-Implementation-Version: 1.5
+Implementation-Version: 1.5-SNAPSHOT
 Group-Id: com.apica
 Short-Name: ApicaLoadtest
 Long-Name: Apica Loadtest
 Url: https://wiki.jenkins-ci.org/display/JENKINS/Apica+Loadtest
-Plugin-Version: 1.5
+Plugin-Version: 1.5-SNAPSHOT (private-8a94dce5-andras.nemes)
 Hudson-Version: 1.610
 Jenkins-Version: 1.610
 Plugin-Developers: Andras Nemes:andrasnemes:andras.nemes@apicasystem.com
