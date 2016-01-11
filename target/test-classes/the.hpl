@@ -2,10 +2,10 @@ Manifest-Version: 1.0
 Group-Id: com.apica
 Short-Name: ApicaLoadtest
 Long-Name: Apica Loadtest
-Url: https://wiki.jenkins-ci.org/display/JENKINS/apica-loadtest
-Plugin-Version: 1.0-SNAPSHOT (private-96064326-andras.nemes)
-Hudson-Version: 1.609
-Jenkins-Version: 1.609
+Url: https://wiki.jenkins-ci.org/display/JENKINS/Apica+Loadtest
+Plugin-Version: 1.5-SNAPSHOT (private-f5e21165-andras.nemes)
+Hudson-Version: 1.610
+Jenkins-Version: 1.610
 Plugin-Developers: Andras Nemes:andrasnemes:andras.nemes@apicasystem.com
 Libraries: C:\Apica\jenkins-ci\apica-loadtest-plugin\target\classes,C:
  \Users\andras.nemes\.m2\repository\com\google\code\gson\gson\2.3.1\gs
