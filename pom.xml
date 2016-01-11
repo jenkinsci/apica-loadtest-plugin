@@ -42,7 +42,7 @@
     <scm>
         <connection>scm:git:ssh://github.com/jenkinsci/apica-loadtest-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/apica-loadtest-plugin.git</developerConnection>
-        <url>https://github.com/jenkinsci/apica-loadtest-plugin</url>
+        <url>apica-loadtest-plugin</url>
         <tag>ApicaLoadtest-1.5</tag>
   </scm>
     <build>
