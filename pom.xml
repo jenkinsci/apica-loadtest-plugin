@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.apica</groupId>
     <artifactId>ApicaLoadtest</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
     <packaging>hpi</packaging>
 
     <name>Apica Loadtest</name>
@@ -43,7 +43,7 @@
         <connection>scm:git:ssh://github.com/jenkinsci/apica-loadtest-plugin.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/apica-loadtest-plugin.git</developerConnection>
         <url>apica-loadtest-plugin</url>
-        <tag>ApicaLoadtest-1.5-upd</tag>
+        <tag>ApicaLoadtest-1.6</tag>
   </scm>
     <build>
         <plugins>
