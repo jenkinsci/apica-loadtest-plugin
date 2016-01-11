@@ -56,6 +56,6 @@ public class LoadtestProductionEnvironment extends LoadtestEnvironment
     @Override
     public String getLtpWebPortalRoot()
     {
-        return "http://loadtest.apicasystem.com/";
+        return "https://loadtest.apicasystem.com/";
     }
 }
