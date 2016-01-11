@@ -3,12 +3,12 @@ Group-Id: com.apica
 Short-Name: ApicaLoadtest
 Long-Name: Apica Loadtest
 Url: https://wiki.jenkins-ci.org/display/JENKINS/Apica+Loadtest
-Plugin-Version: 1.5-SNAPSHOT (private-54441661-andras.nemes)
+Plugin-Version: 1.5
 Hudson-Version: 1.610
 Jenkins-Version: 1.610
 Plugin-Developers: Andras Nemes:andrasnemes:andras.nemes@apicasystem.com
-Libraries: C:\Apica\jenkins-ci\apica-loadtest-plugin\target\classes,C:
- \Users\andras.nemes\.m2\repository\com\google\code\gson\gson\2.3.1\gs
- on-2.3.1.jar
+Libraries: C:\Apica\jenkins-ci\apica-loadtest-plugin\target\classes,\\
+ SESTIVDC02P\RedirectedFolders\andras.nemes\.m2\repository\com\google\
+ code\gson\gson\2.3.1\gson-2.3.1.jar
 Resource-Path: C:\Apica\jenkins-ci\apica-loadtest-plugin\src\main\webapp
 
