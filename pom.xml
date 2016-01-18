@@ -11,7 +11,7 @@
     </parent>
     <groupId>com.apica</groupId>
     <artifactId>ApicaLoadtest</artifactId>
-    <version>1.9</version>
+    <version>1.9-SNAPSHOT</version>
     <packaging>hpi</packaging>
 
     <name>Apica Loadtest</name>
@@ -44,7 +44,7 @@
         <developerConnection>scm:git:ssh://git@github.com/jenkinsci/apica-loadtest-plugin.git</developerConnection>
         <url>apica-loadtest-plugin</url>
         <tag>ApicaLoadtest-1.9</tag>
-  </scm>
+    </scm>
     <build>
         <plugins>
             <plugin>
