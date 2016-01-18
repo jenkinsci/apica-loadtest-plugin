@@ -7,10 +7,10 @@ import java.util.*;
 public class InjectedTest extends junit.framework.TestCase {
   public static junit.framework.Test suite() throws Exception {
     Map parameters = new HashMap();
-    parameters.put("basedir","C:\\Apica\\apica-loadtest-plugin");
+    parameters.put("basedir","C:\\Apica\\LoadtestJenkinsPlugin\\apica-loadtest-plugin");
     parameters.put("artifactId","ApicaLoadtest");
-    parameters.put("outputDirectory","C:\\Apica\\apica-loadtest-plugin\\target\\classes");
-    parameters.put("testOutputDirectory","C:\\Apica\\apica-loadtest-plugin\\target\\test-classes");
+    parameters.put("outputDirectory","C:\\Apica\\LoadtestJenkinsPlugin\\apica-loadtest-plugin\\target\\classes");
+    parameters.put("testOutputDirectory","C:\\Apica\\LoadtestJenkinsPlugin\\apica-loadtest-plugin\\target\\test-classes");
     parameters.put("requirePI","false");
     return new org.jvnet.hudson.test.PluginAutomaticTestBuilder().build(parameters);
   }
