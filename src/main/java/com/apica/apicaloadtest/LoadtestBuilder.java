@@ -96,11 +96,12 @@ public class LoadtestBuilder extends Builder
         }
 
         RunLoadtestJobResult runLoadtestJob = runLoadtestJob(logger, thresholds);
+        
         boolean res = runLoadtestJob.isSuccess();
         PerformanceSummary performanceSummary = runLoadtestJob.getPerformanceSummary();
         if (performanceSummary != null)
         {
-            build.addAction(new LoadTestSummary(build, performanceSummary, loadtestBuilderModel.getPresetName()));
+            build.addAction(new LoadTestSummary(build, performanceSummary, loadtestBuilderModel.getPresetName(), runLoadtestJob.getJobId(), runLoadtestJob.getLinkToTestResult()));
         }
         if (res)
         {
@@ -164,6 +165,8 @@ public class LoadtestBuilder extends Builder
                     summaryRequest.setAuthToken(authToken);
                     LoadtestJobSummaryResponse summaryResponse = loadtestService.getJobSummaryResponse(summaryRequest);
                     res.setPerformanceSummary(summaryResponse.getPerformanceSummary());
+                    res.setJobId(summaryResponse.getJobId());
+                    res.setLinkToTestResult(summaryResponse.getLinkToTestResults());
                     logJobSummary(summaryResponse, logger);
                     if (!thresholds.isEmpty())
                     {

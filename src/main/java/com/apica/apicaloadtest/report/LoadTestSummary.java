@@ -38,13 +38,17 @@ public class LoadTestSummary implements Action
     private final PerformanceSummary performanceSummary;
     private final Date buildStartDate;
     private final String presetName;
+    private final String linkToTestResult;
+    private final int jobId;
 
     public LoadTestSummary(AbstractBuild<?, ?> build, 
-            PerformanceSummary performanceSummary, String presetName)
+            PerformanceSummary performanceSummary, String presetName, int jobId, String linkToTestResult)
     {
         this.build = build;
         this.buildStartDate = new Date(build.getStartTimeInMillis());
         this.presetName = presetName;
+        this.jobId = jobId;
+        this.linkToTestResult = linkToTestResult;
         if (performanceSummary == null)
         {
             this.performanceSummary = new PerformanceSummary();
@@ -92,5 +96,15 @@ public class LoadTestSummary implements Action
     public Date getBuildStartDate()
     {
         return buildStartDate;
-    }    
+    } 
+
+    public String getLinkToTestResult()
+    {
+        return linkToTestResult;
+    }
+
+    public int getJobId()
+    {
+        return jobId;
+    }
 }

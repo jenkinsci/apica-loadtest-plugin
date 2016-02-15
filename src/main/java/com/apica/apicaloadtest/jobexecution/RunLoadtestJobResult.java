@@ -31,6 +31,28 @@ public class RunLoadtestJobResult
 {
     private PerformanceSummary performanceSummary;
     private boolean success;
+    private String linkToTestResult;
+    private int jobId;
+
+    public String getLinkToTestResult()
+    {
+        return linkToTestResult;
+    }
+
+    public void setLinkToTestResult(String linkToTestResult)
+    {
+        this.linkToTestResult = linkToTestResult;
+    }
+
+    public int getJobId()
+    {
+        return jobId;
+    }
+
+    public void setJobId(int jobId)
+    {
+        this.jobId = jobId;
+    }
 
     public PerformanceSummary getPerformanceSummary()
     {
