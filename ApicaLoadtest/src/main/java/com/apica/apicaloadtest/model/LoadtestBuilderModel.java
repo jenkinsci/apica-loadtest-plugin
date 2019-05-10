@@ -23,8 +23,6 @@
  */
 package com.apica.apicaloadtest.model;
 
-import com.apica.apicaloadtest.environment.LoadtestEnvironment;
-import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
 import com.apica.apicaloadtest.infrastructure.JobParamValidatorService;
 import com.apica.apicaloadtest.jobexecution.validation.JobParamsValidationResult;
 import com.apica.apicaloadtest.utils.Utils;
@@ -35,6 +33,7 @@ import hudson.util.FormValidation;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
+import org.apache.commons.lang.Validate;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -45,26 +44,33 @@ import org.kohsuke.stapler.QueryParameter;
 public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilderModel>
 {
 
-    private final String environmentShortName;
+    private final String apiBaseUrl;
     private final String authToken;
     private final String presetName;
     private final String loadtestScenario;
     private final List<LoadtestBuilderThresholdModel> loadtestThresholdParameters;
+    private final String webBaseUrl;
     private final static JobParamValidatorService validatorService = new JobParamValidatorService();
 
     @DataBoundConstructor
-    public LoadtestBuilderModel(String environmentShortName, String authToken, String presetName, String loadtestScenario, List<LoadtestBuilderThresholdModel> loadtestThresholdParameters)
+    public LoadtestBuilderModel(String apiBaseUrl, String webBaseUrl, String authToken, String presetName, String loadtestScenario, List<LoadtestBuilderThresholdModel> loadtestThresholdParameters)
     {
-        this.environmentShortName = environmentShortName;
+        Validate.notEmpty(apiBaseUrl, "The ALT API base URL must not be empty. Example: https://api-ltp.apicasystem.com/v1");
+        Validate.notEmpty(authToken, "The ALT API authentication token must not be empty.");
+        Validate.notEmpty(presetName, "The ALT preset name must not be empty.");
+        Validate.notEmpty(loadtestScenario, "The ALT load test script name must not be empty.");
+        Validate.notEmpty(webBaseUrl, "The ALT Web portal base URL must not be empty. Example: https://loadtest.apicasystem.com");
+        this.apiBaseUrl = apiBaseUrl;
         this.authToken = authToken;
         this.presetName = presetName;
         this.loadtestScenario = loadtestScenario;
         this.loadtestThresholdParameters = loadtestThresholdParameters;
+        this.webBaseUrl = webBaseUrl;
     }
 
-    public String getEnvironmentShortName()
+    public String getApiBaseUrl()
     {
-        return environmentShortName;
+        return apiBaseUrl;
     }
 
     public String getAuthToken()
@@ -87,6 +93,11 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
         return loadtestThresholdParameters;
     }
 
+    public String getWebBaseUrl()
+    {
+        return webBaseUrl;
+    }
+    
     @Extension
     public static class DescriptorImpl extends Descriptor<LoadtestBuilderModel>
     {
@@ -95,11 +106,6 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
         public String getDisplayName()
         {
             return "Loadtest environment";
-        }
-
-        public List<LoadtestEnvironment> getEnvironments()
-        {
-            return LoadtestEnvironmentFactory.getLoadtestEnvironments();
         }
 
         public FormValidation doCheckAuthToken(@QueryParameter String value)
@@ -126,8 +132,7 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
             if (!validatorService.paramValueOkClientSide(value))
             {
                 return FormValidation.error("Please set a loadtest scenario name.");
-            }
-            else if (!validatorService.scenarioNameOkClientSide(value))
+            } else if (!validatorService.scenarioNameOkClientSide(value))
             {
                 return FormValidation.error("Load test file name must be either a .class or .zip file.");
             }
@@ -135,13 +140,24 @@ public class LoadtestBuilderModel extends AbstractDescribableImpl<LoadtestBuilde
         }
 
         public FormValidation doTestSettings(
-                @QueryParameter("environmentShortName") final String environmentShortName,
+                @QueryParameter("apiBaseUrl") final String apiBaseUrl,
                 @QueryParameter("authToken") final String authToken,
                 @QueryParameter("presetName") final String presetName,
-                @QueryParameter("loadtestScenario") final String loadtestScenario) throws IOException, ServletException
+                @QueryParameter("loadtestScenario") final String loadtestScenario,
+                @QueryParameter("webBaseUrl") final String webBaseUrl) throws IOException, ServletException
         {
-            LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(environmentShortName);
-            JobParamsValidationResult validateJobParameters = validatorService.validateJobParameters(authToken, presetName, loadtestScenario, le);
+            JobParamsValidationResult validateJobParameters = validatorService
+                    .validateJobParameters(authToken, presetName, loadtestScenario, apiBaseUrl, webBaseUrl);
+
+            if (!Utils.isNullOrEmpty(validateJobParameters.getApiBaseUrlNameException()))
+            {
+                return FormValidation.error(validateJobParameters.getApiBaseUrlNameException());
+            }
+            
+            if (!Utils.isNullOrEmpty(validateJobParameters.getWebBaseUrlNameException()))
+            {
+                return FormValidation.error(validateJobParameters.getWebBaseUrlNameException());
+            }
             
             if (!Utils.isNullOrEmpty(validateJobParameters.getAuthTokenException()))
             {

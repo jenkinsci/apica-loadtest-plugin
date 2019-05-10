@@ -2,36 +2,42 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
     
     <f:section title="Environment">
-        <f:entry title="Test environment" field="environmentShortName">
-            <select name="environmentShortName">
-                <j:forEach var="inst" items="${descriptor.environments}">
-                    <f:option selected="${inst.shortName==instance.environmentShortName}" value="${inst.shortName}">${inst.displayName}</f:option>
-                </j:forEach>
-            </select>
+        <f:entry title="ALT API base URL: *" field="apiBaseUrl">
+            <f:textbox class="medium-textbox"
+                       style="width: 350px;" id="txtApiBaseUrl">${apiBaseUrl}</f:textbox>
+            <button onclick="document.getElementById('txtApiBaseUrl').value='https://api-ltp.apicasystem.com/v1';return false;"
+               id="select-default-saas-api" style="margin-left: 20px;background-color: #008CBA;color: white;padding: 6px 15px;border-radius: 2px;border: none;">
+                Set default ALT SaaS API base URL</button>
+        </f:entry>
+        
+        <f:entry title="ALT Web base URL: *" field="webBaseUrl">
+            <f:textbox class="medium-textbox"
+                       style="width: 350px;" id="txtWebBaseUrl">${webBaseUrl}</f:textbox>
+            <button onclick="document.getElementById('txtWebBaseUrl').value='https://loadtest.apicasystem.com';return false;"
+               id="select-default-saas-web" style="margin-left: 20px;background-color: #008CBA;color: white;padding: 6px 15px;border-radius: 2px;border: none;">
+                Set default ALT SaaS Web base URL</button>
         </f:entry>
     </f:section>
+    
     <f:section title="Installation">
-        <f:entry title="LTP authentication token: *" field="authToken">
-            <f:textbox class="medium-textbox" style="width: 300px;">${authToken}</f:textbox>
+        <f:entry title="ALT authentication token: *" field="authToken">
+            <f:textbox class="medium-textbox" style="width: 350px;">${authToken}</f:textbox>
         </f:entry>
         <f:entry title="Preset name: *" field="presetName">
-            <f:textbox class="medium-textbox" style="width: 300px;">${presetName}</f:textbox>
+            <f:textbox class="medium-textbox" style="width: 350px;">${presetName}</f:textbox>
         </f:entry>
         <f:entry title="Load test scenario: *" field="loadtestScenario">
-            <f:textbox class="medium-textbox" style="width: 300px;">${loadtestScenario}</f:textbox>
+            <f:textbox class="medium-textbox" style="width: 350px;">${loadtestScenario}</f:textbox>
         </f:entry>
         <f:validateButton title="Test settings" progress="Testing..." 
-            method="testSettings" with="environmentShortName,authToken,presetName,loadtestScenario"/>
+                          method="testSettings" with="apiBaseUrl,webBaseUrl,authToken,presetName,loadtestScenario"/>
     </f:section>
-      
 
     <f:section title="Thresholds">
         <f:entry title="Thresholds" field="loadtestThresholdParameters">
             <f:repeatableProperty field="loadtestThresholdParameters" minimum="0" add="Add Threshold"/>
         </f:entry>
-     </f:section>
-
-     
+    </f:section>
 
     <script type="text/javascript" src="${rootURL}/plugin/ApicaLoadtest/threshold.js"/>
 </j:jelly>

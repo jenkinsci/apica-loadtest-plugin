@@ -30,6 +30,7 @@ package com.apica.apicaloadtest.jobexecution;
 public class RunLoadtestJobResult
 {
     private PerformanceSummary performanceSummary;
+    private String linkToResultDetails;
     private boolean success;
 
     public PerformanceSummary getPerformanceSummary()
@@ -52,5 +53,13 @@ public class RunLoadtestJobResult
         this.success = success;
     }
     
-    
+    public String getLinkToResultDetails()
+    {
+        return linkToResultDetails;
+    }
+
+    public void setLinkToResultDetails(String linkToResultDetails)
+    {
+        this.linkToResultDetails = linkToResultDetails;
+    }
 }

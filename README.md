@@ -1,4 +1,4 @@
-Apica Loadtest plugin for TeamCity uses Maven to build the project. Also, you'll need JDK 7 or later.
+Apica Loadtest plugin for TeamCity uses Maven to build the project. Also, you'll need JDK 8 or later.
 
 Usage:
 ======
@@ -7,7 +7,8 @@ The build runner will appear as "Apica Loadtest" in the list of build runners in
 
 You will need to know the following values in order to insert an Apica Loadtest build runner:
 
-- where your account is located: Enterprise or Trial - this is selectable under the "Load Test Environment" section
+- the ALT API endpoint that the plugin will communicate with during the load test. Example: https://api-ltp.apicasystem.com/v1 . You can find this information under the 'API' menu of the Apica Loadtest Portal
+- the ALT web base URL such as https://loadtest.apicasystem.com
 - your LTP authentication token: you can find this under Setup -> User Settings within the Loadtest Portal. Locate and copy the value of "LTP API Auth Ticket"
 - the preset name which includes the load test parameters such as duration, user count etc. You can save your presets under New Test in LTP. Copy the name of the preset as it is, e.g. "my Apica plugin preset"
 - the load test file name: the name of the load test file that you would like to execute, e.g. "mytest.class" or "test_package.zip"

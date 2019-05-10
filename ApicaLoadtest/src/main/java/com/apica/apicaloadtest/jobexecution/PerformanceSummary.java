@@ -53,7 +53,7 @@ public class PerformanceSummary
     private int averageNetworkConnectTime;
     @SerializedName("Total transmitted bytes")
     private long totalTransmittedBytes;
-
+    
     public PerformanceSummary()
     {
         

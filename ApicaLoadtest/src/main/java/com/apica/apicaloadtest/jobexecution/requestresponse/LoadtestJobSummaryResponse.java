@@ -101,6 +101,8 @@ public class LoadtestJobSummaryResponse
                 .append(summary.getAverageNetworkConnectTime()).append(NL);
         sb.append("Total transmitted bytes: ")
                 .append(summary.getTotalTransmittedBytes()).append(NL);
+        sb.append("Link to load test results: ")
+                .append(linkToTestResults).append(NL);
         sb.append(String.format("--- END ---%n", new Object[0]));
         return sb.toString();
     }

@@ -1,7 +1,5 @@
 package com.apica.apicaloadtest;
 
-import com.apica.apicaloadtest.environment.LoadtestEnvironment;
-import com.apica.apicaloadtest.environment.LoadtestEnvironmentFactory;
 import com.apica.apicaloadtest.infrastructure.JobParamValidatorService;
 import com.apica.apicaloadtest.infrastructure.JobStatusRequest;
 import com.apica.apicaloadtest.infrastructure.ServerSideLtpApiWebService;
@@ -27,7 +25,9 @@ import hudson.model.AbstractProject;
 import hudson.model.Result;
 import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import net.sf.json.JSONObject;
@@ -58,9 +58,9 @@ public class LoadtestBuilder extends Builder
     }
 
     @Override
-    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
+    public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws MalformedURLException
     {
-        List<Threshold> thresholds = new ArrayList<Threshold>();
+        List<Threshold> thresholds = new ArrayList<>();
         List<LoadtestBuilderThresholdModel> loadtestThresholdParameters = loadtestBuilderModel.getLoadtestThresholdParameters();
         if (loadtestThresholdParameters != null && !loadtestThresholdParameters.isEmpty())
         {
@@ -75,8 +75,7 @@ public class LoadtestBuilder extends Builder
         PrintStream logger = listener.getLogger();
         logger.println("Apica Loadtest starting...");
         JobParamsValidationResult validationResult = validateJobParams();
-        LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(loadtestBuilderModel.getEnvironmentShortName());
-        
+
         if (!validationResult.isAllParamsPresent())
         {
             logger.println(validationResult.getExceptionSummary());
@@ -85,7 +84,7 @@ public class LoadtestBuilder extends Builder
         }
         logger.println("Load test preset name: ".concat(loadtestBuilderModel.getPresetName()));
         logger.println("Load test file name: ".concat(loadtestBuilderModel.getLoadtestScenario()));
-        logger.println("Load test environment: ".concat(le.getDisplayName()));
+        logger.println("Load test environment: ".concat(loadtestBuilderModel.getApiBaseUrl()));
         if (!thresholds.isEmpty())
         {
             logger.println("Threshold values: \r\n");
@@ -98,32 +97,23 @@ public class LoadtestBuilder extends Builder
         RunLoadtestJobResult runLoadtestJob = runLoadtestJob(logger, thresholds);
         boolean res = runLoadtestJob.isSuccess();
         PerformanceSummary performanceSummary = runLoadtestJob.getPerformanceSummary();
+        runLoadtestJob.setLinkToResultDetails(runLoadtestJob.getLinkToResultDetails() == null ? "N/A" : runLoadtestJob.getLinkToResultDetails());
         if (performanceSummary != null)
         {
-            build.addAction(new LoadTestSummary(build, performanceSummary, loadtestBuilderModel.getPresetName()));
+            build.addAction(new LoadTestSummary(build, performanceSummary, loadtestBuilderModel.getPresetName(),
+                    runLoadtestJob.getLinkToResultDetails()));
+            build.addAction(new LoadTestTrend(build,
+                    validationResult.getPresetTestInstanceId(), loadtestBuilderModel.getAuthToken(),
+                    loadtestBuilderModel.getWebBaseUrl()));
         }
-        if (res)
-        {
-            listener.finished(Result.SUCCESS);
-        }
-        else
-        {
-            listener.finished(Result.FAILURE);
-        }
-        
-        build.addAction(new LoadTestTrend(build, 
-                validationResult.getPresetTestInstanceId(), loadtestBuilderModel.getAuthToken(), le));
+        listener.finished(res ? Result.SUCCESS : Result.FAILURE);
         return res;
     }
 
-    
-           
-    
-    private RunLoadtestJobResult runLoadtestJob(PrintStream logger, List<Threshold> thresholds)
+    private RunLoadtestJobResult runLoadtestJob(PrintStream logger, List<Threshold> thresholds) throws MalformedURLException
     {
         RunLoadtestJobResult res = new RunLoadtestJobResult();
-        LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(loadtestBuilderModel.getEnvironmentShortName());
-        ServerSideLtpApiWebService loadtestService = new ServerSideLtpApiWebService(le);;
+        ServerSideLtpApiWebService loadtestService = new ServerSideLtpApiWebService(loadtestBuilderModel.getApiBaseUrl());;
         logger.println("Attempting to initiate load test...");
         String loadtestPresetName = loadtestBuilderModel.getPresetName();
         String loadtestFileName = loadtestBuilderModel.getLoadtestScenario();
@@ -164,6 +154,7 @@ public class LoadtestBuilder extends Builder
                     summaryRequest.setAuthToken(authToken);
                     LoadtestJobSummaryResponse summaryResponse = loadtestService.getJobSummaryResponse(summaryRequest);
                     res.setPerformanceSummary(summaryResponse.getPerformanceSummary());
+                    res.setLinkToResultDetails(summaryResponse.getLinkToTestResults());
                     logJobSummary(summaryResponse, logger);
                     if (!thresholds.isEmpty())
                     {
@@ -194,7 +185,7 @@ public class LoadtestBuilder extends Builder
                 logger.println(startByPresetResponse.getException());
                 success = false;
             }
-        } catch (URISyntaxException ex)
+        } catch (URISyntaxException | IOException ex)
         {
             logger.println(ex.getMessage());
             success = false;
@@ -203,14 +194,13 @@ public class LoadtestBuilder extends Builder
         return res;
     }
 
-    private JobParamsValidationResult validateJobParams()
+    private JobParamsValidationResult validateJobParams() throws MalformedURLException
     {
         String loadtestPresetName = this.loadtestBuilderModel.getPresetName();
         String loadtestFileName = this.loadtestBuilderModel.getLoadtestScenario();
         String authToken = this.loadtestBuilderModel.getAuthToken();
-        LoadtestEnvironment le = LoadtestEnvironmentFactory.getLoadtestEnvironment(loadtestBuilderModel.getEnvironmentShortName());
         JobParamValidatorService service = new JobParamValidatorService();
-        return service.validateJobParameters(authToken, loadtestPresetName, loadtestFileName, le);
+        return service.validateJobParameters(authToken, loadtestPresetName, loadtestFileName, loadtestBuilderModel.getApiBaseUrl(), loadtestBuilderModel.getWebBaseUrl());
     }
 
     private void logJobStatus(JobStatusResponse jobStatusResponse, PrintStream logger)
@@ -254,11 +244,6 @@ public class LoadtestBuilder extends Builder
         public String getDisplayName()
         {
             return "Apica Loadtest";
-        }
-
-        public List<LoadtestEnvironment> getEnvironments()
-        {
-            return LoadtestEnvironmentFactory.getLoadtestEnvironments();
         }
 
         @Override

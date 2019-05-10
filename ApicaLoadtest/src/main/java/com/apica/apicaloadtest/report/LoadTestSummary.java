@@ -38,13 +38,15 @@ public class LoadTestSummary implements Action
     private final PerformanceSummary performanceSummary;
     private final Date buildStartDate;
     private final String presetName;
+    private final String linkToTestResults;
 
     public LoadTestSummary(AbstractBuild<?, ?> build, 
-            PerformanceSummary performanceSummary, String presetName)
+            PerformanceSummary performanceSummary, String presetName, String linkToTestResults)
     {
         this.build = build;
         this.buildStartDate = new Date(build.getStartTimeInMillis());
         this.presetName = presetName;
+        this.linkToTestResults = linkToTestResults == null ? "N/A" : linkToTestResults;
         if (performanceSummary == null)
         {
             this.performanceSummary = new PerformanceSummary();
@@ -53,8 +55,6 @@ public class LoadTestSummary implements Action
             this.performanceSummary = performanceSummary;
         }
     }
-
-    
 
     @Override
     public String getIconFileName()
@@ -92,5 +92,10 @@ public class LoadTestSummary implements Action
     public Date getBuildStartDate()
     {
         return buildStartDate;
-    }    
+    }  
+
+    public String getLinkToTestResults()
+    {
+        return linkToTestResults;
+    }
 }

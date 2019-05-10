@@ -3,5 +3,5 @@
   This view is used to render the installed plugins page.
 -->
 <div>
-  This plugin integrates Apica Loadtests to Jenkins.
+  This plugin integrates Apica Loadtests in Jenkins.
 </div>

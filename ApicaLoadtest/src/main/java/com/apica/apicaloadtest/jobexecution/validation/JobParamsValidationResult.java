@@ -35,7 +35,29 @@ public class JobParamsValidationResult
     private String authTokenException;
     private String scenarioFileException;
     private String presetNameException;
+    private String apiBaseUrlNameException;
+    private String webBaseUrlNameException;
 
+    public String getWebBaseUrlNameException()
+    {
+        return webBaseUrlNameException;
+    }
+
+    public void setWebBaseUrlNameException(String webBaseUrlNameException)
+    {
+        this.webBaseUrlNameException = webBaseUrlNameException;
+    }
+    
+    public String getApiBaseUrlNameException()
+    {
+        return apiBaseUrlNameException;
+    }
+
+    public void setApiBaseUrlNameException(String apiBaseUrlNameException)
+    {
+        this.apiBaseUrlNameException = apiBaseUrlNameException;
+    }
+    
     public int getPresetTestInstanceId()
     {
         return presetTestInstanceId;

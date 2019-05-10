@@ -54,6 +54,10 @@
                     <th>Total transmitted bytes</th>
                     <td>${it.performanceSummary.totalTransmittedBytes}</td>
                 </tr>
+                <tr>
+                    <th>Link to details</th>
+                    <td><a href="${it.linkToTestResults}">Click here to view the results in ALT.</a></td>
+                </tr>
             </table>
         </div>
     </l:main-panel>
